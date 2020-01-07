@@ -36,5 +36,4 @@ for i in range(max_iter):
             configs.append(config)
         else:
             no_of_duplicates += 1
-print(configs[len(configs)-1])
 print(len(configs))
