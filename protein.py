@@ -1,16 +1,24 @@
 import random
+import time
 
-algorithm = "HHPHHHPHPHHHPH"
+
+algorithm = "HHPHHHPH"
+dim = 2
+min_stability = 0
+
+start = time.time()
 
 # determine the amount of experiments to do
-for i in range(20):
+for i in range(1):
     dict = {}
     crash = 0
+    path = []
 
     for number, amino in enumerate(algorithm):
         if number in (0,1):
             # set starting conditions
             dict[number] = [amino, (number, 0)]
+            path.append((amino, 1))
         else:
             # randomly determine which path to follow
             prev_coordinate = dict[number-1][1]
@@ -28,6 +36,14 @@ for i in range(20):
                 break
 
             new_coordinate = random.choice(options)
+
+            for i in range(dim):
+                if new_coordinate[i] - prev_coordinate[i] == 1:
+                    movement = i + 1
+                elif new_coordinate[i] - prev_coordinate[i] == -1:
+                    movement = -i - 1
+
+            path.append((amino, movement))
 
             dict[number] = [amino, new_coordinate]
 
@@ -59,8 +75,17 @@ for i in range(20):
                     if i[0] == 'H':
                         if i[1] in options:
                             stability -= 0.5
-        print(dict)
-        print(f"The stability is {round(stability)}")
-    else:
-        print(dict)
-        print("The sequence crashed")
+
+    #     # print(dict)
+    #     # print(f"The stability is {round(stability)}")
+    # else:
+    #     print("The sequence crashed")
+
+    if stability <= min_stability:
+        min_stability = stability
+        best_path = [path, stability]
+
+print(best_path)
+
+end = time.time()
+print(end - start)
