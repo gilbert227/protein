@@ -89,3 +89,5 @@ class Protein:
                     else:
                         directions.append(1)
         return directions
+
+# testtest
