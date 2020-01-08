@@ -1,6 +1,6 @@
 import random
 
-class Protein
+class Protein:
     def __init__(self, sequence, dim=2):
         self.sequence   = sequence
         self.dim        = dim
@@ -22,7 +22,7 @@ class Protein
                 for i in dict.values():
                     if i[1] in options:
                          options.remove(i[1])
-    
+
                 new_coordinate = random.choice(options)
 
                 dict[number] = [amino, new_coordinate]
@@ -40,7 +40,7 @@ class Protein
 
             options = [(exact_coordinate[0] + 1, exact_coordinate[1]), (exact_coordinate[0] - 1, exact_coordinate[1]),
             (exact_coordinate[0], exact_coordinate[1] + 1), (exact_coordinate[0], exact_coordinate[1] - 1)]
-        
+
         return config
 
 #testtest
