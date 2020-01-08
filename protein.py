@@ -1,10 +1,11 @@
 import random
 
-algorithm = "HHPHHHPH"
+algorithm = "HHPHHHPHPHHHPH"
 
 # determine the amount of experiments to do
 for i in range(20):
     dict = {}
+    crash = 0
 
     for number, amino in enumerate(algorithm):
         if number in (0,1):
@@ -22,6 +23,10 @@ for i in range(20):
                 if i[1] in options:
                      options.remove(i[1])
 
+            if options == []:
+                crash = 1
+                break
+
             new_coordinate = random.choice(options)
 
             dict[number] = [amino, new_coordinate]
@@ -29,30 +34,33 @@ for i in range(20):
     stability = 0
 
     # consider all coordinates in the random experiments
-    for number in range(len(algorithm)):
-        current_coordinate = dict[number]
-        exact_coordinate = current_coordinate[1]
+    if crash == 0:
+        for number in range(len(algorithm)):
+            current_coordinate = dict[number]
+            exact_coordinate = current_coordinate[1]
 
-        if current_coordinate[0] == 'H':
-            options = [(exact_coordinate[0] + 1, exact_coordinate[1]), (exact_coordinate[0] - 1, exact_coordinate[1]),
-            (exact_coordinate[0], exact_coordinate[1] + 1), (exact_coordinate[0], exact_coordinate[1] - 1)]
+            if current_coordinate[0] == 'H':
+                options = [(exact_coordinate[0] + 1, exact_coordinate[1]), (exact_coordinate[0] - 1, exact_coordinate[1]),
+                (exact_coordinate[0], exact_coordinate[1] + 1), (exact_coordinate[0], exact_coordinate[1] - 1)]
 
-            # erase connected points from options
-            if number == 0:
-                coordinate_to_delete = [dict[number + 1][1]]
-            elif number == len(algorithm) - 1:
-                coordinate_to_delete = [dict[number - 1][1]]
-            else:
-                coordinate_to_delete = [dict[number - 1][1], dict[number + 1][1]]
+                # erase connected points from options
+                if number == 0:
+                    coordinate_to_delete = [dict[number + 1][1]]
+                elif number == len(algorithm) - 1:
+                    coordinate_to_delete = [dict[number - 1][1]]
+                else:
+                    coordinate_to_delete = [dict[number - 1][1], dict[number + 1][1]]
 
-            for i in coordinate_to_delete:
-                options.remove(i)
+                for i in coordinate_to_delete:
+                    options.remove(i)
 
-            # check for connections to the current point
-            for i in dict.values():
-                if i[0] == 'H':
-                    if i[1] in options:
-                        stability -= 0.5
-
-    print(dict)
-    print(f"The stability is {round(stability)}")
+                # check for connections to the current point
+                for i in dict.values():
+                    if i[0] == 'H':
+                        if i[1] in options:
+                            stability -= 0.5
+        print(dict)
+        print(f"The stability is {round(stability)}")
+    else:
+        print(dict)
+        print("The sequence crashed")
