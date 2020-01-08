@@ -9,7 +9,7 @@ min_stability = 0
 start = time.time()
 
 # determine the amount of experiments to do
-for i in range(100000):
+for i in range(1):
     dict = {}
     crash = 0
     path = []
