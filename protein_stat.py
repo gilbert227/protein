@@ -1,39 +1,34 @@
 import random
+from protein_class import Protein
+import numpy as np
+import matplotlib.pyplot as plt
 
-protein = "HHPHHHPH"
+protein = Protein("HHPHHHPH")
 configs = []
-no_of_duplicates = 0
-max_duplicates   = 100
+max_duplicates = 100000
 
-max_iter = 200000
+max_iter = 100000
 
-for i in range(max_iter):
-    while no_of_duplicates < max_duplicates:
-        
-        config = {}
-        
-        for number, amino in enumerate(protein):
-        
-            if number in (0,1):
-                # set starting conditions
-                config[number] = [amino, (number, 0)]
+def get_separating_iterations():
+    # get number of generated states between non-duplicate states
+    
+    separating_iterations = []
+    count = 0
+    duplicate_count = 0
+    
+    for i in range(max_iter):
+        while duplicate_count < max_duplicates:
+            config = protein.generate_random_path(return_stability=False)
+            if config not in configs:
+                configs.append(config)
+                separating_iterations.append(count)
+                count = 0
             else:
-                prev_coordinate = config[number-1][1]
+                count += 1
+                duplicate_count += 1
+        return separating_iterations
         
-                options = [(prev_coordinate[0] + 1, prev_coordinate[1]), (prev_coordinate[0] - 1, prev_coordinate[1]),
-                (prev_coordinate[0], prev_coordinate[1] + 1), (prev_coordinate[0], prev_coordinate[1] - 1)]
-        
-                for j in config.values():
-                    if j[1] in options:
-                         options.remove(j[1])
-        
-                if options == []:
-                    break
-                
-                new_coordinate = random.choice(options)
-                config[number] = [amino, new_coordinate]
-        if config not in configs:
-            configs.append(config)
-        else:
-            no_of_duplicates += 1
-print(len(configs))
+
+if __name__ == "__main__":
+    plt.plot(get_separating_iterations())
+    plt.show()
