@@ -55,7 +55,7 @@ class Protein:
                 # iterate through sequence
                  # choose which strategy to take
                 if strategy == 'random':
-                    next_coordinate = self.random_step(path, index, True)
+                    next_coordinate = self.random_step(path, index, False)
                 elif strategy == 'greedy':
                     if amino == 'H':
                         next_coordinate = self.greedy_step(path, index, h_positions, False)
