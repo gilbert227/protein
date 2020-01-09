@@ -3,14 +3,13 @@ import time
 import operator
 from protein_class import Protein
 
-iterations = 100000
-protein = Protein("HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH")
+iterations = 100
+protein = Protein("HHHHPHPH")
 
 start = time.time()
 for i in range(iterations):
-    path = protein.generate_path('greedy')
-    if path != None and path[1] < -15:
-        print(path)
+    path = protein.generate_path('random')
+    print(path)
 
 end = time.time()
 print(end - start)
