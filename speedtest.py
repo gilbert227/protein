@@ -4,7 +4,7 @@ import operator
 from protein_class import Protein
 
 iterations = 100
-protein = Protein("HHHHPHPH")
+protein = Protein("HPHHPHPH")
 
 start = time.time()
 for i in range(iterations):
