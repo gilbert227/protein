@@ -22,8 +22,8 @@ class Protein:
             if enum_sequence[i][1] == "H":
                 h_positions.append((0,i))
 
-            enum_sequence.pop(0)
-
+        enum_sequence.pop(0)
+        enum_sequence.pop(0)
 
         for index, amino in enum_sequence:
 
