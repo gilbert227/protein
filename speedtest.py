@@ -1,15 +1,16 @@
 import random
 import time
+import operator
 from protein_class import Protein
 
-iterations = 1
-protein = Protein("HHPHHHPH")
+iterations = 100000
+protein = Protein("HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH")
 
-paths = []
 start = time.time()
 for i in range(iterations):
-    path = protein.generate_random_path()
-    paths.append(path)
+    path = protein.generate_path('greedy')
+    if path != None and path[1] < -15:
+        print(path)
 
 end = time.time()
 print(end - start)
