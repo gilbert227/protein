@@ -70,9 +70,13 @@ class Protein:
                     return None
                 path[index] = [amino, next_coordinate]
 
-                if amino == 'H' or amino == 'C':
+                if amino == 'H':
                     stability += self.get_added_stability(path, next_coordinate, amino, h_positions, c_positions, symmetric)
                     h_positions.append(next_coordinate)
+
+                if amino == 'C':
+                    stability += self.get_added_stability(path, next_coordinate, amino, h_positions, c_positions, symmetric)
+                    c_positions.append(next_coordinate)
 
         if not return_stability:
             return path
