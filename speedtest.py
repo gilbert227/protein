@@ -1,15 +1,15 @@
 import random
 import time
 import operator
-from protein1_class import Protein
+from protein_class import Protein
 
 iterations = 10
-protein = Protein("CCCCCC")
+protein = Protein("CHHCPH")
 
 start = time.time()
 for i in range(iterations):
     path = protein.generate_path('random')
-    if path != None and path[1] < -4:
+    if path != None and path[1] < 1:
         print(path)
 
 end = time.time()
