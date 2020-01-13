@@ -61,6 +61,7 @@ class ProteinStats:
 if __name__ == "__main__":
     protein = Protein("PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP")
     path = ProteinStats().get_best_configuration(protein, "greedy", 100000)
+    print(path)
     ProteinStats().plot(path[0][0], score=path[0][1])
     #plt.plot(ProteinStats().get_separating_duplicates(protein, "greedy", 10000))
     #plt.show()
