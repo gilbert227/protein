@@ -199,4 +199,4 @@ class Protein:
             if path and path[1] <= best_path[1]:
                 best_path = path
 
-        return best_path[1], (time.time() - start_time)
+        return best_path, (time.time() - start_time)
