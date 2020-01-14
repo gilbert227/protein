@@ -34,7 +34,6 @@ def get_step_options(protein):
 
 def get_added_stability(protein, amino, step):
     ''' returns the added stability for a step from a partial chain of aminoacids '''
-    print(amino, protein.h_positions, protein.c_positions)
     if amino == "P":
         return 0
 
@@ -43,7 +42,7 @@ def get_added_stability(protein, amino, step):
     positions.remove(protein.path[-1][1])
 
     added_stability = 0
-    for amino_neighbor, amino_positions in protein.amino_positions:
+    for amino_neighbor, amino_positions in protein.amino_positions.items():
         for position in positions:
             if position in amino_positions:
                 added_stability += protein.bond_stabilities[amino][amino_neighbor]

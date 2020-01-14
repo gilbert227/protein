@@ -1,4 +1,4 @@
-from helpers import navigator
+from helpers.navigator import get_added_stability
 
 class Protein:
     def __init__(self, sequence):
@@ -6,6 +6,10 @@ class Protein:
         self.path = []
         self.amino_positions = {} 
         self.stability = 0
+
+        # Symmetric keeps track of whether the full path is on the y-axis. If true, only
+        # steps along the y-axis and in the positive x-direction will be considered.
+        # This excludes mirror images with respect to the y-axis.
         self.symmetric = True    
 
         self.initialize_path()
@@ -33,6 +37,14 @@ class Protein:
         self.stability = 0
         self.symmetric = True
 
-    def add_step(
+    def add_step(self, amino, step):
+        ''' adds step to path and updates relevant attributes '''
+        if self.symmetric == True and step[1] != 0:
+            # path no longer coincides with y-axis, symmetric is now false
+            self.symmetric = False
+        self.stability += get_added_stability(self, amino, step)
+        self.amino_positions[amino].append(step)
+        self.path.append([amino, step])
+
     def __str__(self):
         print(f"path:{self.path}, stability:{self.stability}")
