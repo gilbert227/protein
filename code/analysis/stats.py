@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from algorithms.greedy_path import generate_greedy_path
 from algorithms.random_path import generate_random_path
 from classes.protein import Protein
+from copy import deepcopy
 
 def generate_path(protein, strategy):
     if strategy == "random":
@@ -38,4 +39,17 @@ def get_separating_duplicates(protein, strategy, duplication_threshold):
     # plot for testing purposes, should be separate function
     plt.plot(separating_duplicates)
     plt.show()
+    
     return separating_duplicates, len(separating_duplicates)
+
+def get_best_config(protein, strategy, iterations):
+    stability = 0
+    best_config = None
+
+    for i in range(iterations):
+        generate_path(protein, strategy)
+        if protein.stability < stability:
+            stability = protein.stability
+            best_config = deepcopy(protein)
+    
+    return best_config
