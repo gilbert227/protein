@@ -1,6 +1,6 @@
 '''
     navigator.py
-
+    
     supporting functions for navigating proteins and surroundings
 '''
 
@@ -59,7 +59,7 @@ def get_path_directions(path):
     '''
     # obtain positions from path
     positions = [point[1] for point in path]
-
+    
     directions = []
     for i in range(len(positions)-1):
         # append appropriate number for each step's direction
