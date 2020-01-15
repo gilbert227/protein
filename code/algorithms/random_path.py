@@ -14,3 +14,4 @@ def generate_random_path(protein):
         else:
             # generate new path if path cannot be finished
             generate_random_path(protein)
+            break

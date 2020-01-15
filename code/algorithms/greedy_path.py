@@ -21,4 +21,5 @@ def generate_greedy_path(protein, greed=1):
         else:
             # generate new greedy path if it cannot be finished
             generate_greedy_path(protein, greed)
+            break
 

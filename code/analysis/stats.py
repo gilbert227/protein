@@ -24,7 +24,7 @@ def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000):
     return (None, None, False)
 
 def get_separating_duplicates(protein, strategy, duplication_threshold):
-    ''' get number of generated duplicates between found unique states '''
+    ''' get number of duplicates generated between found unique states '''
     configs = []
     separating_duplicates = []
     found = True
