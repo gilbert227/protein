@@ -4,13 +4,13 @@ class Protein:
     def __init__(self, sequence):
         self.sequence = sequence
         self.path = []
-        self.amino_positions = {} 
+        self.amino_positions = {}
         self.stability = 0
 
         # Symmetric keeps track of whether the full path is on the y-axis. If true, only
         # steps along the y-axis and in the positive x-direction will be considered.
         # This excludes mirror images with respect to the y-axis.
-        self.symmetric = True    
+        self.symmetric = True
 
         self.initialize_path()
 
@@ -19,10 +19,10 @@ class Protein:
             "H": {"P": 0, "H": -1, "C": -1},
             "C": {"P": 0, "H": -1, "C": -5},
         }
-    
+
     def initialize_path(self):
         self.reset()
-        
+
         for i, amino in enumerate(self.sequence[:2]):
             self.path.append([amino, (0, i)])
             self.amino_positions[amino].append((0, i))
@@ -47,4 +47,4 @@ class Protein:
         self.path.append([amino, step])
 
     def __str__(self):
-        print(f"path:{self.path}, stability:{self.stability}")
+        return f"path:{self.path}, stability:{self.stability}"
