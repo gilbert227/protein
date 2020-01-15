@@ -33,7 +33,9 @@ def get_separating_duplicates(protein, strategy, duplication_threshold):
         separation, config, found = get_next_unique_config(protein, strategy, configs, duplication_threshold)
         separating_duplicates.append(separation)
         configs.append(config)
+    # remove last element from configs, contains (None, None, False)
     separating_duplicates.pop()
+    # plot for testing purposes, should be separate function
     plt.plot(separating_duplicates)
     plt.show()
     return separating_duplicates, len(separating_duplicates)
