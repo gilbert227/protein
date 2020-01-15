@@ -1,4 +1,11 @@
-import random
+import sys
+
+sys.path.append('../')
+
+
+from code.helpers.navigator import get_step_options, get_added_stability
+
+from random import choice
 import time
 import operator
 from protein_class import Protein
