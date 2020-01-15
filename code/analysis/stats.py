@@ -6,6 +6,7 @@ obtain statistics to examine algorithm performance
 import matplotlib.pyplot as plt
 from algorithms.greedy_path import generate_greedy_path
 from algorithms.random_path import generate_random_path
+from classes.protein import Protein
 
 def generate_path(protein, strategy):
     if strategy == "random":
