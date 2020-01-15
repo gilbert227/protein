@@ -1,27 +1,28 @@
-import random
+from code.helpers.navigator import get_step_options, get_added_stability
+from code.algorithms.greedy_path import generate_greedy_path
+from code.algorithms.random_path import generate_random_path
+from code.classes.protein import Protein
+
+from random import choice
 import time
-import operator
-from protein_class import Protein
 
 protein_string = input("What is the Protein string: ")
 iterations_input = int(input("How many iterations (integer): "))
-strategy = input("Which strategy (greedy or random): ")
+strategy = input("Which strategy (g for greedy or r for random): ")
 minimum_stability = int(input("What is the minimum stability (give in negative values): "))
+
 
 iterations = iterations_input
 protein = Protein(protein_string)
 
-
-
 start = time.time()
-counter = 0
-for i in range(iterations):
-    path = protein.generate_path(strategy)
-    if path != None and path[1] < minimum_stability:
-        print(path)
-        counter += 1
 
+for i in range(iterations):
+    generate_greedy_path(protein)
+    if protein.stability < minimum_stability:
+        print(protein.path)
+        print(protein.stability)
 
 end = time.time()
-print(counter)
+
 print(end - start)
