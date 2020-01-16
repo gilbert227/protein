@@ -4,7 +4,7 @@ from random import choice
 import copy
 
 
-def generate_breath_first(protein, n = 4):
+def generate_breath_first(protein, n = 6):
     '''
     generates an algorithm that runs n amount of amino letters and then chooses the one with the most amount of stability points,
     then goes on to the next n amount of letters
@@ -14,7 +14,7 @@ def generate_breath_first(protein, n = 4):
     protein.initialize_path()
 
     # set the amount of chunk iterations and the starting point in the protein sequence
-    iterations = 100
+    iterations = 50
     a = 2
 
     # determine the amount of chunks one can use
@@ -32,11 +32,15 @@ def generate_breath_first(protein, n = 4):
         start_symmetric = copy.deepcopy(protein.symmetric)
 
         for i in range(iterations):
-            # simply perform the algorithm to choose, now it is random
+            # simply perform the algorithm to choose, now it is greedy
             for amino in protein.sequence[a:a+n]:
                 options = get_step_options(protein)
                 if options != []:
-                    step = choice(options)
+                    weighted_options = []
+                    for option in options:
+                        weighted_options.append((option, get_added_stability(protein, amino, option)))
+                    best_score = min([weight for option, weight in weighted_options])
+                    step = choice([option for option, weight in weighted_options if weight == best_score])
                     protein.add_step(amino, step)
                 else:
                     # if there is no option, set stability to 100 so it will never be chosen
