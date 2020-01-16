@@ -5,7 +5,7 @@ import copy
 import math
 
 
-def generate_breath_first(protein, n = 6):
+def generate_breath_first(protein, n = 5):
     '''
     generates an algorithm that runs n amount of amino letters and then chooses the one with the most amount of stability points,
     then goes on to the next n amount of letters
@@ -15,7 +15,7 @@ def generate_breath_first(protein, n = 6):
     protein.initialize_path()
 
     # set the amount of chunk iterations and a, the starting point in the protein sequence
-    iterations = 50
+    iterations = 20
     a = 2
 
     # determine the amount of chunks one can use, note that we round down
@@ -59,21 +59,22 @@ def generate_breath_first(protein, n = 6):
             protein.return_to_start(n, start_stability, start_amino_positions, start_symmetric)
 
         # add best result to protein class
-        if best_path[1] < 0 and best_path != None:
+        if best_path[1] < 0:
             # add the chunk to the path, sometimes it is not possible because the sequence has crashed,
             # this will leave errors when we want to remove the previous position in a path, as
             # this this possition does not exist
             try:
                 protein.add_chunk(best_path[0], n)
             except:
+                print("this")
                 break
 
         # determine next chunk
-        a = a + n
+        a += n
 
     # set remaining letters with greedy algorithm
     if amount_of_remaining_letters != 0:
-        for amino in protein.sequence[a:a+amount_of_remaining_letters]:
+        for amino in protein.sequence[a:len(protein.sequence)]:
             options = get_step_options(protein)
             if options != []:
                 weighted_options = []
