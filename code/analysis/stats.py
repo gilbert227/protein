@@ -16,31 +16,31 @@ amino_colors = {
     'C': 'red'
 }
 
-def generate_path(protein, strategy):
+def generate_path(protein, strategy, greed=1, care=0):
     if strategy == "random":
         generate_random_path(protein)
     elif strategy == "greedy":
-        generate_greedy_path(protein)
+        generate_greedy_path(protein, greed, care)
     elif strategy == "breadth first":
         generate_breath_first(protein)
 
-def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000):
+def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, greed=1, care=0):
     ''' returns first configuration not in configs '''
     for i in range(max_iterations):
-        generate_path(protein, strategy)
+        generate_path(protein, strategy, greed, care)
         config = protein.path
         if config not in configs:
             return (i, config, True)
     return (None, None, False)
 
-def get_separating_duplicates(protein, strategy, duplication_threshold):
+def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1, care=0):
     ''' get number of duplicates generated between found unique states '''
     configs = []
     separating_duplicates = []
     found = True
 
     while found:
-        separation, config, found = get_next_unique_config(protein, strategy, configs, duplication_threshold)
+        separation, config, found = get_next_unique_config(protein, strategy, configs, duplication_threshold, greed, care)
         separating_duplicates.append(separation)
         configs.append(config)
     # remove last element from configs, contains (None, None, False)
@@ -51,12 +51,12 @@ def get_separating_duplicates(protein, strategy, duplication_threshold):
 
     return separating_duplicates, len(separating_duplicates)
 
-def get_best_config(protein, strategy, iterations):
+def get_best_config(protein, strategy, iterations, greed=1, care=0):
     best_stability = 0
     best_config = None
 
     for i in range(iterations):
-        generate_path(protein, strategy)
+        generate_path(protein, strategy, greed, care)
         stability = protein.stability
         if stability < best_stability:
             best_stability = stability
@@ -64,20 +64,29 @@ def get_best_config(protein, strategy, iterations):
 
     return best_config
 
-def get_stability_histogram(protein, strategy, iterations):
+def get_stability_histogram(protein, strategy, iterations, greed=1, care=0):
     stabilities = []
 
     for i in range(iterations):
-        generate_path(protein, strategy)
+        generate_path(protein, strategy, greed, care)
         stabilities.append(protein.stability)
+
     n_bins = len(set(stabilities))
     plt.hist(stabilities, bins=n_bins)
     plt.show()
 
+    n = len(stabilities)
+    mean = sum(stabilities)/n
+    skew_num = 0
+    skew_denom = 0
+    for stability in stabilities:
+        skew_num += (stability - mean)**3
+        skew_denom += (stability - mean)**2
+    skewness = (skew_num / n) / (skew_denom/(n-1))**(3/2)
+    return mean, skewness
+
 def estimate_max_stability(protein):
     pass
-
-
 
 def plot_path(protein):
     ''' visualisation of folded protein '''
