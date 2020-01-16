@@ -4,7 +4,7 @@ from random import choice
 import copy
 
 
-def generate_breath_first(protein = Protein("HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH"), n = 2):
+def generate_breath_first(protein = Protein("HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH"), n = 4):
     '''
     generates an algorithm that runs n amount of amino letters and then chooses the one with the most amount of stability points,
     then goes on to the next n amount of letters
@@ -13,7 +13,7 @@ def generate_breath_first(protein = Protein("HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPP
 
 
     a = 2
-    number_of_chunks = round((len(protein.sequence) - 2)/n)
+    number_of_chunks = round((len(protein.sequence) - 2)/ n)
     for i in range(number_of_chunks):
         decide_best_chunk(protein, a, n)
         a = a + n
@@ -40,9 +40,11 @@ def decide_best_chunk(protein, a, n):
             if options != []:
                 step = choice(options)
                 protein.add_step(amino, step)
-
+            else:
+                protein.stability = 100
                 # I do not know how to deal with crash errors here
                 # there should be some more checks
+
 
         # save the best path and stability
         stability = protein.stability
@@ -54,6 +56,7 @@ def decide_best_chunk(protein, a, n):
         protein.return_to_start(n, start_stability, start_amino_positions, start_symmetric)
 
     # add best result to protein class
-    protein.add_chunk(best_path[0], n)
+    if best_path[1] < 0:
+        protein.add_chunk(best_path[0], n)
 
     return best_path
