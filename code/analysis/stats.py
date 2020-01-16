@@ -6,6 +6,7 @@ obtain statistics to examine algorithm performance
 import matplotlib.pyplot as plt
 from algorithms.greedy_path import generate_greedy_path
 from algorithms.random_path import generate_random_path
+from algorithms.breath_first import generate_breath_first
 from classes.protein import Protein
 from copy import deepcopy
 
@@ -20,6 +21,8 @@ def generate_path(protein, strategy):
         generate_random_path(protein)
     elif strategy == "greedy":
         generate_greedy_path(protein)
+    elif strategy == "breadth first":
+        generate_breath_first(protein)
 
 def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000):
     ''' returns first configuration not in configs '''
@@ -45,7 +48,7 @@ def get_separating_duplicates(protein, strategy, duplication_threshold):
     # plot for testing purposes, should be separate function
     plt.plot(separating_duplicates)
     plt.show()
-    
+
     return separating_duplicates, len(separating_duplicates)
 
 def get_best_config(protein, strategy, iterations):
@@ -58,7 +61,7 @@ def get_best_config(protein, strategy, iterations):
         if stability < best_stability:
             best_stability = stability
             best_config = deepcopy(protein)
-    
+
     return best_config
 
 def get_stability_histogram(protein, strategy, iterations):
