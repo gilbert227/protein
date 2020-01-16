@@ -57,6 +57,9 @@ class Protein:
         self.symmetric = start_symmetric
 
     def add_chunk(self, best_path, n):
+        '''
+        adds multiple pre-defined steps to the path
+        '''
         for amino, step in best_path[-n:]:
             self.add_step(amino, step)
 
