@@ -2,6 +2,7 @@ from helpers.navigator import get_step_options, get_added_stability
 from classes.protein import Protein
 from random import choice
 import copy
+import math
 
 
 def generate_breath_first(protein, n = 6):
@@ -13,12 +14,13 @@ def generate_breath_first(protein, n = 6):
     # reinitialize protein path
     protein.initialize_path()
 
-    # set the amount of chunk iterations and the starting point in the protein sequence
+    # set the amount of chunk iterations and a, the starting point in the protein sequence
     iterations = 50
     a = 2
 
-    # determine the amount of chunks one can use
-    number_of_chunks = round((len(protein.sequence) - a)/ n)
+    # determine the amount of chunks one can use, note that we round down
+    number_of_chunks = math.floor((len(protein.sequence) - a) / n)
+    amount_of_remaining_letters = len(protein.path) - a - (n * number_of_chunks)
 
     # iterate over the chunks and decide the best path per chunk
     for i in range(number_of_chunks):
@@ -57,7 +59,7 @@ def generate_breath_first(protein, n = 6):
             protein.return_to_start(n, start_stability, start_amino_positions, start_symmetric)
 
         # add best result to protein class
-        if best_path[1] < 0:
+        if best_path[1] < 0 and best_path != None:
             # add the chunk to the path, sometimes it is not possible because the sequence has crashed,
             # this will leave errors when we want to remove the previous position in a path, as
             # this this possition does not exist
@@ -68,6 +70,21 @@ def generate_breath_first(protein, n = 6):
 
         # determine next chunk
         a = a + n
+
+    # set remaining letters with greedy algorithm
+    if amount_of_remaining_letters != 0:
+        for amino in protein.sequence[a:a+amount_of_remaining_letters]:
+            options = get_step_options(protein)
+            if options != []:
+                weighted_options = []
+                for option in options:
+                    weighted_options.append((option, get_added_stability(protein, amino, option)))
+                best_score = min([weight for option, weight in weighted_options])
+                step = choice([option for option, weight in weighted_options if weight == best_score])
+                protein.add_step(amino, step)
+            else:
+                generate_breath_first(protein)
+                break
 
     # final check for errors
     if len(protein.path) != len(protein.sequence):
