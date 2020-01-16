@@ -5,11 +5,11 @@ import copy
 import math
 
 
-def generate_breath_first(protein, n = 6):
+def generate_breath_first(protein, n = 6,  care = 0):
     '''
-    generates an algorithm that runs n amount of amino letters and then chooses the one with the most amount of stability points,
+    generates an algorithm that runs n amount of amino letters using the greedy algorithm, then chooses the one with the most amount of stability points,
     then goes on to the next n amount of letters
-    one requirement is that: (length of the protein sequence - 2)/n is an integer.
+    Do note that for larger n, the sequence will crash very quickly, such that there is no solution, the amount of iterations can be lowered to make it work.
     '''
     # reinitialize protein path
     protein.initialize_path()
@@ -40,13 +40,13 @@ def generate_breath_first(protein, n = 6):
                 if options != []:
                     weighted_options = []
                     for option in options:
-                        weighted_options.append((option, get_added_stability(protein, amino, option)))
+                        weighted_options.append((option, get_added_stability(protein, amino, option, care)[1]))
                     best_score = min([weight for option, weight in weighted_options])
                     step = choice([option for option, weight in weighted_options if weight == best_score])
                     protein.add_step(amino, step)
                 else:
                     # if there is no option, set stability to 100 so it will never be chosen
-                    protein.stability = 100
+                    protein.stability += 100
                     break
 
             # save the best path and stability
@@ -59,21 +59,23 @@ def generate_breath_first(protein, n = 6):
             protein.return_to_start(n, start_stability, start_amino_positions, start_symmetric)
 
         # add best result to protein class
-        if best_path[1] < 0 and best_path != None:
+        if best_path[1] < 0:
             # add the chunk to the path, sometimes it is not possible because the sequence has crashed,
             # this will leave errors when we want to remove the previous position in a path, as
             # this this possition does not exist
             try:
                 protein.add_chunk(best_path[0], n)
             except:
+                print("this")
                 break
 
         # determine next chunk
-        a = a + n
+        a += n
 
     # set remaining letters with greedy algorithm
-    if amount_of_remaining_letters != 0:
-        for amino in protein.sequence[a:a+amount_of_remaining_letters]:
+    if amount_of_remaining_letters > 0:
+        print("thut")
+        for amino in protein.sequence[a:len(protein.sequence)]:
             options = get_step_options(protein)
             if options != []:
                 weighted_options = []
@@ -88,4 +90,5 @@ def generate_breath_first(protein, n = 6):
 
     # final check for errors
     if len(protein.path) != len(protein.sequence):
+        print("that")
         generate_breath_first(protein)
