@@ -9,6 +9,12 @@ from algorithms.random_path import generate_random_path
 from classes.protein import Protein
 from copy import deepcopy
 
+amino_colors = {
+    'P': 'black',
+    'H': 'blue',
+    'C': 'red'
+}
+
 def generate_path(protein, strategy):
     if strategy == "random":
         generate_random_path(protein)
@@ -43,13 +49,45 @@ def get_separating_duplicates(protein, strategy, duplication_threshold):
     return separating_duplicates, len(separating_duplicates)
 
 def get_best_config(protein, strategy, iterations):
-    stability = 0
+    best_stability = 0
     best_config = None
 
     for i in range(iterations):
         generate_path(protein, strategy)
-        if protein.stability < stability:
-            stability = protein.stability
+        stability = protein.stability
+        if stability < best_stability:
+            best_stability = stability
             best_config = deepcopy(protein)
     
     return best_config
+
+def get_stability_histogram(protein, strategy, iterations, n_bins=20):
+    stabilities = []
+
+    for i in range(iterations):
+        generate_path(protein, strategy)
+        stabilities.append(protein.stability)
+    plt.hist(stabilities, bins=n_bins)
+    plt.show()
+
+def estimate_max_stability(protein):
+    pass
+
+
+
+def plot_path(protein):
+    ''' visualisation of folded protein '''
+    x_positions = []
+    y_positions = []
+    point_markers = []
+    for amino, position in protein.path:
+        x = position[0]
+        y = position[1]
+        x_positions.append(x)
+        y_positions.append(y)
+
+        plt.text(x, y, amino, horizontalalignment='center', verticalalignment='center', color=amino_colors[amino])
+    plt.title(f"stability: {protein.stability}")
+    plt.plot(x_positions, y_positions, 'ko-', markerfacecolor='white', markersize=15)
+    plt.axis('off')
+    plt.show()
