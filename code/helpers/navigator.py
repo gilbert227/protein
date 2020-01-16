@@ -32,21 +32,24 @@ def get_step_options(protein):
         return options
 
 
-def get_added_stability(protein, amino, step):
+def get_added_stability(protein, amino, step, care=0):
     ''' returns the added stability for a step from a partial chain of aminoacids '''
     if amino == "P":
-        return 0
+        return 0, 0
 
     positions = get_surrounding_coordinates(step)
     # remove last position in path to prevent counting bonds along the protein chain
     positions.remove(protein.path[-1][1])
 
     added_stability = 0
+    weight = 0
     for amino_neighbor, amino_positions in protein.amino_positions.items():
         for position in positions:
             if position in amino_positions:
-                added_stability += protein.bond_stabilities[amino][amino_neighbor]
-    return added_stability
+                binding_score, blocking_penalty = protein.bond_stabilities[amino][amino_neighbor]
+                added_stability += binding_score
+                weight += (binding_score + blocking_penalty * care)
+    return added_stability, weight
 
 
 def get_path_directions(path):

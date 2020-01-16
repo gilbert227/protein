@@ -61,12 +61,13 @@ def get_best_config(protein, strategy, iterations):
     
     return best_config
 
-def get_stability_histogram(protein, strategy, iterations, n_bins=20):
+def get_stability_histogram(protein, strategy, iterations):
     stabilities = []
 
     for i in range(iterations):
         generate_path(protein, strategy)
         stabilities.append(protein.stability)
+    n_bins = len(set(stabilities))
     plt.hist(stabilities, bins=n_bins)
     plt.show()
 

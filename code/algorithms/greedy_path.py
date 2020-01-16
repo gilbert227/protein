@@ -1,7 +1,7 @@
 from helpers.navigator import get_step_options, get_added_stability
 from random import choice
 
-def generate_greedy_path(protein, greed=1):
+def generate_greedy_path(protein, care=0.5, greed=1):
     '''
     generates path choosing highest scoring step if any, otherwise random
     TODO: implement variable greed
@@ -14,12 +14,12 @@ def generate_greedy_path(protein, greed=1):
         if options != []:
             weighted_options = []
             for option in options:
-                weighted_options.append((option, get_added_stability(protein, amino, option)))
+                weighted_options.append((option, get_added_stability(protein, amino, option, care)[1]))
             best_score = min([weight for option, weight in weighted_options])
             step = choice([option for option, weight in weighted_options if weight == best_score])    
             protein.add_step(amino, step)
         else:
             # generate new greedy path if it cannot be finished
-            generate_greedy_path(protein, greed)
+            generate_greedy_path(protein, care, greed)
             break
 

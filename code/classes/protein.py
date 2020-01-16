@@ -16,9 +16,9 @@ class Protein:
         self.initialize_path()
 
         self.bond_stabilities = {
-            "P": {"P": 0, "H":  0, "C":  0},
-            "H": {"P": 0, "H": -1, "C": -1},
-            "C": {"P": 0, "H": -1, "C": -5},
+            "P": {"P": (0, 0), "H": (0, 2), "C": (0, 3)},
+            "H": {"P": (0, 2), "H": (-1, 0), "C": (-1, 1)},
+            "C": {"P": (0, 3), "H": (-1, 1), "C": (-5, 0)},
         }
 
     def initialize_path(self):
@@ -43,7 +43,7 @@ class Protein:
         if self.symmetric == True and step[1] != 0:
             # path no longer coincides with y-axis, symmetric is now false
             self.symmetric = False
-        self.stability += get_added_stability(self, amino, step)
+        self.stability += get_added_stability(self, amino, step)[0]
         self.amino_positions[amino].append(step)
         self.path.append([amino, step])
 
