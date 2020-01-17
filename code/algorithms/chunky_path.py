@@ -1,5 +1,5 @@
-from helpers.navigator import get_step_options, get_added_stability
-from classes.protein import Protein
+from code.helpers.navigator import get_step_options, get_added_stability
+from code.classes.protein import Protein
 from random import choice
 import copy
 import math
@@ -25,6 +25,10 @@ def generate_chunky_path(protein, n = 6, iterations = 500, step_strategy = "rand
         for i in range(iterations):
             simulation = copy.deepcopy(protein)
 
+            # used to check if the first letter in a chunk has a coordinate to go to
+            counter = 0
+            first_letter_stuck = 0
+
             # create the paths, choose between using a random step or a greedy step in method
             for amino in simulation.sequence[start:start + n]:
                 if step_strategy == "random":
@@ -33,9 +37,11 @@ def generate_chunky_path(protein, n = 6, iterations = 500, step_strategy = "rand
                     if options != []:
                         step = choice(options)
                         simulation.add_step(amino, step)
+                        counter += 1
                     else:
+                        if counter == 0:
+                            first_letter_stuck = 1
                         # the chunk could not be finished, add a 100 stability points so it will not be chosen as best chunk
-                        # possible improvement: if the first amino letter in chunk has no option, stop iterating immediately
                         simulation.stability += 100
                         break
                 else:
@@ -48,16 +54,24 @@ def generate_chunky_path(protein, n = 6, iterations = 500, step_strategy = "rand
                         best_score = min([weight for option, weight in weighted_options])
                         step = choice([option for option, weight in weighted_options if weight == best_score])
                         simulation.add_step(amino, step)
+                        counter += 1
                     else:
+                        if counter == 0:
+                            first_letter_stuck = 1
                         # the chunk could not be finished, add a 100 stability points so it will not be chosen as best chunk
-                        # possible improvement: if the first amino letter in chunk has no option, stop iterating immediately
                         simulation.stability += 100
                         break
+
+            # stop iterating over chunks if the first letter has no where to go
+            if first_letter_stuck == 1:
+                break
 
             # determine the chunk with the best stability
             if simulation.stability < best_stability:
                 best_stability = copy.deepcopy(simulation.stability)
                 best_path = copy.deepcopy(simulation.path)
+
+
 
         if best_stability > 0:
             # the sequence crashed and has no options left, so stop iterating over chunks

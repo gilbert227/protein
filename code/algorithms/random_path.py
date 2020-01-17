@@ -1,4 +1,4 @@
-from helpers.navigator import get_step_options, get_added_stability
+from code.helpers.navigator import get_step_options, get_added_stability
 from random import choice
 
 def generate_random_path(protein):

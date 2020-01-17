@@ -1,4 +1,4 @@
-from helpers.navigator import get_added_stability
+from code.helpers.navigator import get_added_stability
 import copy
 
 class Protein:
