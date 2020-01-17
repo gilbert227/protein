@@ -40,14 +40,14 @@ def generate_chunky_path(protein, n = 6, iterations = 500, step_strategy = "rand
                         break
                 else:
                     # perform greedy step algorithm
-                    options = get_step_options(protein)
+                    options = get_step_options(simulation)
                     if options != []:
                         weighted_options = []
                         for option in options:
-                            weighted_options.append((option, get_added_stability(protein, amino, option, care)[1]))
+                            weighted_options.append((option, get_added_stability(simulation, amino, option, care)[1]))
                         best_score = min([weight for option, weight in weighted_options])
                         step = choice([option for option, weight in weighted_options if weight == best_score])
-                        protein.add_step(amino, step)
+                        simulation.add_step(amino, step)
                     else:
                         # the chunk could not be finished, add a 100 stability points so it will not be chosen as best chunk
                         # possible improvement: if the first amino letter in chunk has no option, stop iterating immediately
@@ -94,6 +94,3 @@ def generate_chunky_path(protein, n = 6, iterations = 500, step_strategy = "rand
     # the sequence crashed somewhere, so start a new path
     if crash == 1:
         generate_chunky_path()
-
-    print(protein)
-    print(len(protein.path))
