@@ -93,4 +93,4 @@ def generate_chunky_path(protein, n = 6, iterations = 500, step_strategy = "rand
 
     # the sequence crashed somewhere, so start a new path
     if crash == 1:
-        generate_chunky_path()
+        generate_chunky_path(protein)
