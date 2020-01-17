@@ -148,7 +148,7 @@ def plot_path(protein):
     plt.axis('off')
     plt.show()
 
-def comparing_test(protein, iterations, care_hist=True, freq_table=True):
+def comparing_test(protein, strategy, iterations, greed=1, care_hist=True, freq_table=True):
 
     # GREEDY CARE ITERATIONS -----------------------------------------------------------------------
     if care_hist == True:
@@ -160,15 +160,15 @@ def comparing_test(protein, iterations, care_hist=True, freq_table=True):
             stabilities = []
 
             for ii in range(iterations):
-                generate_path(protein, 'chunky path', 1, i/10)
+                generate_path(protein, strategy, greed=greed, care=i/10)
                 stabilities.append(protein.stability)
 
             df = pd.DataFrame(stabilities, columns=['Stability'])
             df.sort_values(by=['Stability'], inplace=True)
 
-            quantile = int(df.quantile(.25))
+            quantile = int(df.quantile(.01))
 
-            df = df[df['Stability'] < quantile]
+            df = df[df['Stability'] <= quantile]
 
             n_bins = len(set(df['Stability']))
             plt.subplot(3, 4, count)
