@@ -16,13 +16,13 @@ amino_colors = {
     'C': 'red'
 }
 
-def generate_path(protein, strategy, greed=1, care=0):
+def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
     if strategy == "random":
         generate_random_path(protein)
     elif strategy == "greedy":
         generate_greedy_path(protein, greed, care)
-    elif strategy == "breadth first":
-        generate_breath_first(protein)
+    elif strategy == "chunky path":
+        generate_chunky_path(protein, chunk_size, chunk_iterations, step_strategy, care)
 
 def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, greed=1, care=0):
     ''' returns first configuration not in configs '''

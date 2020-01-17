@@ -8,7 +8,15 @@ import operator
 
 protein_string = input("What is the Protein string: ")
 iterations_input = int(input("How many iterations (integer): "))
-strategy = input("Which strategy (g for greedy, b for breath first, r for random): ")
+strategy = input("Which strategy (g for greedy, c for chunky path, r for random): ")
+if strategy == "c":
+    default = input("Do you want to use default values(y for yes): ")
+    if default != "y":
+        n = int(input("What is n (positive integer): "))
+        chunk_iterations = int(input("How many chunk iterations (positive integer): "))
+        step_strategy = input("What step strategy (random by default, give another letter for greedy): ")
+        if step_strategy != "random":
+            care = float(input("What is the care(should be a float): "))
 minimum_stability = int(input("What is the minimum stability (give in negative values): "))
 
 iterations = iterations_input
@@ -19,8 +27,11 @@ counter = 0
 for i in range(iterations):
     if strategy == "g":
         generate_greedy_path(protein)
-    elif strategy == "b":
-        generate_breath_first(protein)
+    elif strategy == "c":
+        if default == "y":
+            generate_chunky_path(protein)
+        else:
+            generate_chunky_path(protein, n, chunk_iterations, step_strategy, care)
     else:
         generate_random_path(protein)
 
