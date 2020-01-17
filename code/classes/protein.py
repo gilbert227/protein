@@ -47,15 +47,6 @@ class Protein:
         self.amino_positions[amino].append(step)
         self.path.append([amino, step])
 
-    def return_to_start(self, n, start_stability, start_amino_positions, start_symmetric):
-        '''
-        method to let the bread_first method return to its starting positions
-        '''
-        del self.path[-n:]
-        self.stability = start_stability
-        self.amino_positions = copy.deepcopy(start_amino_positions)
-        self.symmetric = start_symmetric
-
     def add_chunk(self, best_path, n):
         '''
         adds multiple pre-defined steps to the path
