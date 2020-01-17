@@ -4,10 +4,10 @@ stats.py
 obtain statistics to examine algorithm performance
 '''
 import matplotlib.pyplot as plt
-from algorithms.greedy_path import generate_greedy_path
-from algorithms.random_path import generate_random_path
-from algorithms.chunky_path import generate_chunky_path
-from classes.protein import Protein
+from code.algorithms.greedy_path import generate_greedy_path
+from code.algorithms.random_path import generate_random_path
+from code.algorithms.chunky_path import generate_chunky_path
+from code.classes.protein import Protein
 from copy import deepcopy
 import numpy as np
 import pandas as pd
@@ -155,15 +155,15 @@ def comparing_test(protein, iterations, care_hist=True, freq_table=True):
         count = 0
 
         # use care from 0.0 to 1.1
-        for i in np.arange(0, 12, 1):   
-            count += 1     
+        for i in np.arange(0, 12, 1):
+            count += 1
             stabilities = []
 
             for ii in range(iterations):
                 generate_path(protein, 'chunky path', 1, i/10)
                 stabilities.append(protein.stability)
 
-            df = pd.DataFrame(stabilities, columns=['Stability']) 
+            df = pd.DataFrame(stabilities, columns=['Stability'])
             df.sort_values(by=['Stability'], inplace=True)
 
             quantile = int(df.quantile(.25))
@@ -171,8 +171,8 @@ def comparing_test(protein, iterations, care_hist=True, freq_table=True):
             df = df[df['Stability'] < quantile]
 
             n_bins = len(set(df['Stability']))
-            plt.subplot(3, 4, count) 
-            
+            plt.subplot(3, 4, count)
+
             mean = sum(stabilities)/iterations
             plt.title(f'care = {i / 10}, mean = {mean}, quartile = {quantile}')
             plt.hist(df['Stability'], bins=n_bins, color='green')
