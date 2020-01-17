@@ -4,11 +4,13 @@ stats.py
 obtain statistics to examine algorithm performance
 '''
 import matplotlib.pyplot as plt
-from code.algorithms.greedy_path import generate_greedy_path
-from code.algorithms.random_path import generate_random_path
-from code.algorithms.chunky_path import generate_chunky_path
-from code.classes.protein import Protein
+from algorithms.greedy_path import generate_greedy_path
+from algorithms.random_path import generate_random_path
+from algorithms.chunky_path import generate_chunky_path
+from classes.protein import Protein
 from copy import deepcopy
+import numpy as np
+import pandas as pd
 
 amino_colors = {
     'P': 'black',
@@ -104,3 +106,75 @@ def plot_path(protein):
     plt.plot(x_positions, y_positions, 'ko-', markerfacecolor='white', markersize=15)
     plt.axis('off')
     plt.show()
+
+def get_stability_histogram(protein, strategy, iterations, greed=1, care=0):
+    stabilities = []
+
+    for i in range(iterations):
+        generate_path(protein, strategy, greed, care)
+        stabilities.append(protein.stability)
+
+    n_bins = len(set(stabilities))
+    plt.hist(stabilities, bins=n_bins)
+    plt.show()
+
+    n = len(stabilities)
+    mean = sum(stabilities)/n
+    skew_num = 0
+    skew_denom = 0
+    for stability in stabilities:
+        skew_num += (stability - mean)**3
+        skew_denom += (stability - mean)**2
+    skewness = (skew_num / n) / (skew_denom/(n-1))**(3/2)
+    return mean, skewness
+
+def estimate_max_stability(protein):
+    pass
+
+def plot_path(protein):
+    ''' visualisation of folded protein '''
+    x_positions = []
+    y_positions = []
+    point_markers = []
+    for amino, position in protein.path:
+        x = position[0]
+        y = position[1]
+        x_positions.append(x)
+        y_positions.append(y)
+
+        plt.text(x, y, amino, horizontalalignment='center', verticalalignment='center', color=amino_colors[amino])
+    plt.title(f"stability: {protein.stability}")
+    plt.plot(x_positions, y_positions, 'ko-', markerfacecolor='white', markersize=15)
+    plt.axis('off')
+    plt.show()
+
+def comparing_test(protein, iterations, care_hist=True, freq_table=True):
+
+    # GREEDY CARE ITERATIONS -----------------------------------------------------------------------
+    if care_hist == True:
+        count = 0
+
+        # use care from 0.0 to 1.1
+        for i in np.arange(0, 12, 1):   
+            count += 1     
+            stabilities = []
+
+            for ii in range(iterations):
+                generate_path(protein, 'chunky path', 1, i/10)
+                stabilities.append(protein.stability)
+
+            df = pd.DataFrame(stabilities, columns=['Stability']) 
+            df.sort_values(by=['Stability'], inplace=True)
+
+            quantile = int(df.quantile(.25))
+
+            df = df[df['Stability'] < quantile]
+
+            n_bins = len(set(df['Stability']))
+            plt.subplot(3, 4, count) 
+            
+            mean = sum(stabilities)/iterations
+            plt.title(f'care = {i / 10}, mean = {mean}, quartile = {quantile}')
+            plt.hist(df['Stability'], bins=n_bins, color='green')
+
+        plt.show()
