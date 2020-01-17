@@ -2,7 +2,7 @@
 weighted_construction.py
 
 '''
-from helpers.navigator import get_step_options, get_added_stability
+from code.helpers.navigator import get_step_options, get_added_stability
 from copy import deepcopy
 from random import choice
 
