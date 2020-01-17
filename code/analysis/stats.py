@@ -6,7 +6,7 @@ obtain statistics to examine algorithm performance
 import matplotlib.pyplot as plt
 from algorithms.greedy_path import generate_greedy_path
 from algorithms.random_path import generate_random_path
-from algorithms.breath_first import generate_breath_first
+from algorithms.generate_chunky_path import generate_chunky_path
 from classes.protein import Protein
 from copy import deepcopy
 
