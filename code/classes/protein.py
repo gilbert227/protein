@@ -1,4 +1,4 @@
-from helpers.navigator import get_added_stability
+from code.helpers.navigator import get_added_stability
 import copy
 
 class Protein:
@@ -46,15 +46,6 @@ class Protein:
         self.stability += get_added_stability(self, amino, step)[0]
         self.amino_positions[amino].append(step)
         self.path.append([amino, step])
-
-    def return_to_start(self, n, start_stability, start_amino_positions, start_symmetric):
-        '''
-        method to let the bread_first method return to its starting positions
-        '''
-        del self.path[-n:]
-        self.stability = start_stability
-        self.amino_positions = copy.deepcopy(start_amino_positions)
-        self.symmetric = start_symmetric
 
     def add_chunk(self, best_path, n):
         '''

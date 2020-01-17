@@ -1,4 +1,4 @@
-from helpers.navigator import get_step_options, get_added_stability
+from code.helpers.navigator import get_step_options, get_added_stability
 from random import choice
 
 def generate_greedy_path(protein, greed=1, care=0.5):
@@ -16,10 +16,9 @@ def generate_greedy_path(protein, greed=1, care=0.5):
             for option in options:
                 weighted_options.append((option, get_added_stability(protein, amino, option, care)[1]))
             best_score = min([weight for option, weight in weighted_options])
-            step = choice([option for option, weight in weighted_options if weight == best_score])    
+            step = choice([option for option, weight in weighted_options if weight == best_score])
             protein.add_step(amino, step)
         else:
             # generate new greedy path if it cannot be finished
             generate_greedy_path(protein, greed, care)
             break
-
