@@ -160,7 +160,7 @@ def comparing_test(protein, strategy, iterations, greed=1, care_hist=True, freq_
             stabilities = []
 
             for ii in range(iterations):
-                generate_path(protein, strategy, greed=greed, care=i/10, chunk_size, chunk_iterations, step_strategy)
+                generate_path(protein, strategy, greed=greed, care=i/10, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
                 stabilities.append(protein.stability)
 
             df = pd.DataFrame(stabilities, columns=['Stability'])
@@ -190,7 +190,7 @@ def care_histogram(protein, iterations, strategy, percentage, chunk_size = 6, ch
         stabilities = []
 
         for ii in range(iterations):
-            generate_path(protein, strategy, 1, i/10, chunk_size, chunk_iterations, step_strategy)
+            generate_path(protein, strategy, greed=1, care=i/10, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
             stabilities.append(protein.stability)
 
         # make dataframe using pandas
