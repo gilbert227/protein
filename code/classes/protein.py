@@ -2,8 +2,9 @@ from code.helpers.navigator import get_added_stability
 import copy
 
 class Protein:
-    def __init__(self, sequence):
+    def __init__(self, sequence, dim3=False):
         self.sequence = sequence
+        self.dim3 = dim3
         self.path = []
         self.amino_positions = {}
         self.stability = 0
@@ -24,9 +25,14 @@ class Protein:
     def initialize_path(self):
         self.reset()
 
-        for i, amino in enumerate(self.sequence[:2]):
-            self.path.append([amino, (0, i)])
-            self.amino_positions[amino].append((0, i))
+        if not self.dim3:
+            for i, amino in enumerate(self.sequence[:2]):
+                self.path.append([amino, (0, i)])
+                self.amino_positions[amino].append((0, i))
+        else:
+            for i, amino in enumerate(self.sequence[:2]):
+                self.path.append([amino, (0, 0, i)])
+                self.amino_positions[amino].append((0, 0, i))
 
     def reset(self):
         self.path = []
@@ -40,8 +46,8 @@ class Protein:
 
     def add_step(self, amino, step):
         ''' adds step to path and updates relevant attributes '''
-        if self.symmetric == True and step[1] != 0:
-            # path no longer coincides with y-axis, symmetric is now false
+        if self.symmetric == True and step[-1] != 0:
+            # path no longer coincides with vertical-axis, symmetric is now false
             self.symmetric = False
         self.stability += get_added_stability(self, amino, step)[0]
         self.amino_positions[amino].append(step)

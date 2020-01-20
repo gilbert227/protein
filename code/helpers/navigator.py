@@ -5,14 +5,24 @@
 '''
 
 
-def get_surrounding_coordinates(coordinate):
-    ''' returns positions surrounding inserted coordinate '''
-    return [
-        (coordinate[0] + 1, coordinate[1]),
-        (coordinate[0] - 1, coordinate[1]),
-        (coordinate[0], coordinate[1] + 1),
-        (coordinate[0], coordinate[1] - 1)
-    ]
+def get_surrounding_coordinates(protein, coordinate):
+    ''' returns positions surrounding inserted coordinate depending on the third dimension'''
+    if not protein.dim3:
+        return [
+            (coordinate[0] + 1, coordinate[1]),
+            (coordinate[0] - 1, coordinate[1]),
+            (coordinate[0], coordinate[1] + 1),
+            (coordinate[0], coordinate[1] - 1)
+            ]
+    else:
+        return [
+        (coordinate[0] + 1, coordinate[1], coordinate[2]),
+        (coordinate[0] - 1, coordinate[1], coordinate[2]),
+        (coordinate[0], coordinate[1] + 1, coordinate[2]),
+        (coordinate[0], coordinate[1] - 1, coordinate[2]),
+        (coordinate[0], coordinate[1], coordinate[2] + 1),
+        (coordinate[0], coordinate[1], coordinate[2] - 1)
+        ]
 
 
 def get_step_options(protein):
@@ -20,13 +30,20 @@ def get_step_options(protein):
     coordinate = positions[-1]
     if protein.symmetric:
         # reduced options if path has not strayed from y-axis to eliminate mirrorred configurations
-        return [
-            (coordinate[0] + 1  , coordinate[1]),
-            (coordinate[0]      , coordinate[1] + 1),
-        ]
+        if not protein.dim3:
+            return [
+                (coordinate[0] + 1  , coordinate[1]),
+                (coordinate[0]      , coordinate[1] + 1)
+                ]
+        else:
+            return [
+                (coordinate[0] + 1  , coordinate[1], coordinate[2]),
+                (coordinate[0]      , coordinate[1] + 1, coordinate[2]),
+                (coordinate[0]      , coordinate[1], coordinate[2] + 1)
+            ]
 
     else:
-        options = get_surrounding_coordinates(coordinate)
+        options = get_surrounding_coordinates(protein, coordinate)
         for position in positions:
             if position in options: options.remove(position)
         return options
@@ -37,7 +54,7 @@ def get_added_stability(protein, amino, step, care=0):
     if amino == "P" and care == 0:
         return 0, 0
 
-    positions = get_surrounding_coordinates(step)
+    positions = get_surrounding_coordinates(protein, step)
     # remove last position in path to prevent counting bonds along the protein chain
     positions.remove(protein.path[-1][1])
 
