@@ -6,22 +6,7 @@ from random import choice
 import time
 import operator
 
-def speedtest():
-    protein_string = input("What is the Protein string: ")
-    iterations_input = int(input("How many iterations (integer): "))
-    strategy = input("Which strategy (g for greedy, c for chunky path, r for random): ")
-    if strategy == "c":
-        default = input("Do you want to use default values(y for yes): ")
-        if default != "y":
-            n = int(input("What is n (positive integer): "))
-            chunk_iterations = int(input("How many chunk iterations (positive integer): "))
-            step_strategy = input("What step strategy (random by default, give another letter for greedy): ")
-            if step_strategy != "random":
-                care = float(input("What is the care(should be a float): "))
-    minimum_stability = int(input("What is the minimum stability (give in negative values): "))
-
-    iterations = iterations_input
-    protein = Protein(protein_string)
+def speedtest(protein, strategy, minimum_stability, default = "y", iterations = 100, greed = 1, care = 0, chunk_size = 6, chunk_iterations = 100, step_strategy = "g"):
 
     start = time.time()
     counter = 0
@@ -32,7 +17,7 @@ def speedtest():
             if default == "y":
                 generate_chunky_path(protein)
             else:
-                generate_chunky_path(protein, n, chunk_iterations, step_strategy, care)
+                generate_chunky_path(protein, chunk_size, chunk_iterations, step_strategy, care)
         else:
             generate_random_path(protein)
 

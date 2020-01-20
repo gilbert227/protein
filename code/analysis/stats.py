@@ -26,16 +26,16 @@ def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iter
     elif strategy == "chunky path":
         generate_chunky_path(protein, chunk_size, chunk_iterations, step_strategy, care)
 
-def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, greed=1, care=0):
+def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
     ''' returns first configuration not in configs '''
     for i in range(max_iterations):
-        generate_path(protein, strategy, greed, care)
+        generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy)
         config = protein.path
         if config not in configs:
             return (i, config, True)
     return (None, None, False)
 
-def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1, care=0):
+def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
     ''' get number of duplicates generated between found unique states '''
     configs = []
     separating_duplicates = []
@@ -53,7 +53,7 @@ def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1,
 
     return separating_duplicates, len(separating_duplicates)
 
-def get_best_config(protein, strategy, iterations, greed=1, care=0):
+def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
     best_stability = 0
     best_config = None
 
@@ -66,11 +66,11 @@ def get_best_config(protein, strategy, iterations, greed=1, care=0):
 
     return best_config
 
-def get_stability_histogram(protein, strategy, iterations, greed=1, care=0):
+def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
     stabilities = []
 
     for i in range(iterations):
-        generate_path(protein, strategy, greed, care)
+        generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy)
         stabilities.append(protein.stability)
 
     n_bins = len(set(stabilities))
@@ -107,11 +107,11 @@ def plot_path(protein):
     plt.axis('off')
     plt.show()
 
-def get_stability_histogram(protein, strategy, iterations, greed=1, care=0):
+def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
     stabilities = []
 
     for i in range(iterations):
-        generate_path(protein, strategy, greed, care)
+        generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy)
         stabilities.append(protein.stability)
 
     n_bins = len(set(stabilities))
@@ -148,7 +148,7 @@ def plot_path(protein):
     plt.axis('off')
     plt.show()
 
-def comparing_test(protein, strategy, iterations, greed=1, care_hist=True, freq_table=True):
+def comparing_test(protein, strategy, iterations, greed=1, care_hist=True, freq_table=True, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
 
     # GREEDY CARE ITERATIONS -----------------------------------------------------------------------
     if care_hist == True:
@@ -160,7 +160,7 @@ def comparing_test(protein, strategy, iterations, greed=1, care_hist=True, freq_
             stabilities = []
 
             for ii in range(iterations):
-                generate_path(protein, strategy, greed=greed, care=i/10)
+                generate_path(protein, strategy, greed=greed, care=i/10, chunk_size, chunk_iterations, step_strategy)
                 stabilities.append(protein.stability)
 
             df = pd.DataFrame(stabilities, columns=['Stability'])
@@ -179,7 +179,7 @@ def comparing_test(protein, strategy, iterations, greed=1, care_hist=True, freq_
 
         plt.show()
 
-def care_histogram(protein, iterations, strategy, percentage):
+def care_histogram(protein, iterations, strategy, percentage, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
     """
     """
     count = 0
@@ -190,7 +190,7 @@ def care_histogram(protein, iterations, strategy, percentage):
         stabilities = []
 
         for ii in range(iterations):
-            generate_path(protein, strategy, 1, i/10)
+            generate_path(protein, strategy, 1, i/10, chunk_size, chunk_iterations, step_strategy)
             stabilities.append(protein.stability)
 
         # make dataframe using pandas
