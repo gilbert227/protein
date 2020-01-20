@@ -4,6 +4,7 @@ stats.py
 obtain statistics to examine algorithm performance
 '''
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 from code.algorithms.greedy_path import generate_greedy_path
 from code.algorithms.random_path import generate_random_path
 from code.algorithms.chunky_path import generate_chunky_path
@@ -107,6 +108,34 @@ def plot_path(protein):
     plt.axis('off')
     plt.show()
 
+def plot_3d_path(protein):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    x_positions = []
+    y_positions = []
+    z_positions = []
+    point_markers = []
+    for amino, position in protein.path:
+        x = position[0]
+        y = position[1]
+        z = position[2]
+        x_positions.append(x)
+        y_positions.append(y)
+        z_positions.append(z)
+
+        ax.text(x, y, z, amino, horizontalalignment='center', verticalalignment='center', color=amino_colors[amino])
+
+    x_array = np.asarray(x_positions)
+    y_array = np.asarray(y_positions)
+    z_array = np.asarray(z_positions)
+
+
+    plt.title(f"stability: {protein.stability}")
+    ax.plot(x_array, y_array, z_array, 'ko-', markerfacecolor='white', markersize=15)
+    
+    plt.show()
+
+
 def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
     stabilities = []
 
@@ -131,22 +160,6 @@ def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chun
 def estimate_max_stability(protein):
     pass
 
-def plot_path(protein):
-    ''' visualisation of folded protein '''
-    x_positions = []
-    y_positions = []
-    point_markers = []
-    for amino, position in protein.path:
-        x = position[0]
-        y = position[1]
-        x_positions.append(x)
-        y_positions.append(y)
-
-        plt.text(x, y, amino, horizontalalignment='center', verticalalignment='center', color=amino_colors[amino])
-    plt.title(f"stability: {protein.stability}")
-    plt.plot(x_positions, y_positions, 'ko-', markerfacecolor='white', markersize=15)
-    plt.axis('off')
-    plt.show()
 
 def comparing_test(protein, strategy, iterations, greed=1, care_hist=True, freq_table=True, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
 

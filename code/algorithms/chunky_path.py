@@ -5,7 +5,7 @@ import copy
 import math
 
 
-def generate_chunky_path(protein, n = 6, iterations = 500, step_strategy = "random", care = 0):
+def generate_chunky_path(protein, chunk_size = 6, iterations = 500, step_strategy = "random", care = 0):
 
     # this is the starting amino letter in the sequence, as the first two are already set, we start with index 2
     start = 2
@@ -13,8 +13,8 @@ def generate_chunky_path(protein, n = 6, iterations = 500, step_strategy = "rand
     protein.initialize_path()
 
     # determine if the whole path can be made in chunks
-    chunks = math.floor((len(protein.sequence) - start)/n)
-    chars_left = len(protein.sequence) - start - (n * chunks)
+    chunks = math.floor((len(protein.sequence) - start)/chunk_size)
+    chars_left = len(protein.sequence) - start - (chunk_size * chunks)
 
     crash = 0
 
@@ -30,7 +30,7 @@ def generate_chunky_path(protein, n = 6, iterations = 500, step_strategy = "rand
             first_letter_stuck = 0
 
             # create the paths, choose between using a random step or a greedy step in method
-            for amino in simulation.sequence[start:start + n]:
+            for amino in simulation.sequence[start:start + chunk_size]:
                 if step_strategy == "random":
                     # perform random step algorithm
                     options = get_step_options(simulation)
@@ -79,8 +79,8 @@ def generate_chunky_path(protein, n = 6, iterations = 500, step_strategy = "rand
             break
         else:
             # add the best path to the protein object
-            protein.add_chunk(best_path, n)
-            start += n
+            protein.add_chunk(best_path, chunk_size)
+            start += chunk_size
 
     # if there are remaining letters, add them by using a random or greedy method
     if crash == 0 and chars_left > 0:
