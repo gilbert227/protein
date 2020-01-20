@@ -178,3 +178,35 @@ def comparing_test(protein, strategy, iterations, greed=1, care_hist=True, freq_
             plt.hist(df['Stability'], bins=n_bins, color='green')
 
         plt.show()
+
+def care_histogram(protein, iterations, strategy, percentage):
+    """
+    """
+    count = 0
+
+    # use care from 0.0 to 1.1
+    for i in np.arange(0, 12, 1):
+        count += 1
+        stabilities = []
+
+        for ii in range(iterations):
+            generate_path(protein, strategy, 1, i/10)
+            stabilities.append(protein.stability)
+
+        # make dataframe using pandas
+        df = pd.DataFrame(stabilities, columns=['Stability'])
+        df.sort_values(by=['Stability'], inplace=True)
+
+        # get the desired range of data
+        percentile = int(df.quantile(percentage))
+        df = df[df['Stability'] <= percentile]
+
+        mean = sum(stabilities)/iterations
+
+        # plot the histograms
+        n_bins = len(set(df['Stability']))
+        plt.subplot(3, 4, count)
+        plt.title(f'care = {i / 10}, mean = {mean}')
+        plt.hist(df['Stability'], bins=n_bins, color='green')
+
+    plt.show()

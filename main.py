@@ -48,6 +48,39 @@ if default == "y":
 print("Please insert the following details with care.")
 
 while True:
-    amount = int(input("How many times do you want to run the algorithm? (positive integer)"))
+    amount = int(input("How many times do you want to run the algorithm? (positive integer): "))
     if amount > 0:
         break
+
+if strategy == "g":
+    while True:
+        greed = float(input("What is the greed factor? (float): "))
+        if greed:
+            break
+
+    while True:
+        care = float(input("What is the care factor? (float): "))
+        if care:
+            break
+
+if strategy == "c":
+    while True:
+        chunk_size = int(input("What is the chunk size? (positive integer): "))
+        if chunk_size > 0:
+            break
+
+    while True:
+        chunk_iterations = int(input("How many chunk iterations? (positive integer): "))
+        if chunk_iterations > 0:
+            break
+
+    while True:
+        step_strategy = input("What step strategy? (r for random, g for greedy ")
+        if step_strategy == "r" or step_strategy == "g":
+            break
+
+    if step_strategy == "g":
+        while True:
+            care = float(input("What is the care factor? (float): "))
+            if care:
+                break
