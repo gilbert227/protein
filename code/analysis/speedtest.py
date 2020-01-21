@@ -22,10 +22,12 @@ def speedtest(protein, strategy, minimum_stability, default = "y", iterations = 
             generate_random_path(protein)
 
         if protein.stability < minimum_stability:
-            print(protein)
+            print("protein: ")
+            print({protein})
+            print()
 
             counter += 1
 
     end = time.time()
-    print(counter)
-    print(end - start)
+    print(f"Amount of results: {counter}")
+    print(f"Time passed: {end - start}")

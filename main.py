@@ -4,7 +4,6 @@ from code.algorithms.random_path import generate_random_path
 from code.algorithms.chunky_path import generate_chunky_path
 from code.helpers.navigator import *
 from code.analysis.stats import *
-from code.analysis.speedtest import *
 from code.classes.protein import Protein
 
 print("Welcome to the User Interface!")
@@ -20,7 +19,17 @@ while True:
         print()
         break
 
-protein = Protein(protein_string)
+print("Do you want to use 3D? (y for yes) ")
+while True:
+    dimension3 = input("")
+    if dimension3:
+        print()
+        break
+
+if dimension3 == "y":
+    protein = Protein(protein_string, dim3=True)
+else:
+    protein = Protein(protein_string)
 
 print("What algorithm do you want to perform on this protein?")
 print("Insert r for random, g for greedy and c for chunky path.")
@@ -34,6 +43,7 @@ while True:
 
 print("Do you want use default values and run a single time? (y for default)")
 default = input("")
+print()
 
 if default == "y":
     if algorithm == "r":
@@ -44,43 +54,123 @@ if default == "y":
         generate_chunky_path(protein)
 
     print(protein)
+    print()
+
+    plot = input("Do you want a plot of your result? (y for yes)")
+    if plot == "y":
+        plot_path(protein)
+
 else:
     print("Please insert the following details with care.")
 
+    print("What is the amount of iterations? (positive integer): ")
     while True:
-        amount = int(input("How many times do you want to run the algorithm? (positive integer): "))
+        amount = int(input(""))
         if amount > 0:
             break
 
-    if strategy == "g":
+    print("What is the minimum required stability to print to path? (integer, used for speedtest)")
+    if amount > 1:
         while True:
-            greed = float(input("What is the greed factor? (float): "))
+            minimum_stability = int(input(""))
+            if minimum_stability:
+                break
+
+    if algorithm == "g":
+        print("What is the greed factor? (float): ")
+        while True:
+            greed = float(input(""))
             if greed:
                 break
 
-        while True:
-            care = float(input("What is the care factor? (float): "))
-            if care:
-                break
+        print("Do you want to want the care factor to be 0? (y for yes)")
+        use_care = input("")
+        if use_care == "y":
+            care = 0
+        else:
+            print("Please give the care factor value now (float): ")
+            while True:
+                care = float(input(""))
+                if care:
+                    break
 
-    if strategy == "c":
+
+    if algorithm == "c":
+        print("What is the chunk size? (positive integer): ")
         while True:
-            chunk_size = int(input("What is the chunk size? (positive integer): "))
+            chunk_size = int(input(""))
             if chunk_size > 0:
                 break
 
+        print("How many chunk iterations? (positive integer): ")
         while True:
-            chunk_iterations = int(input("How many chunk iterations? (positive integer): "))
+            chunk_iterations = int(input(""))
             if chunk_iterations > 0:
                 break
 
+        print("What step strategy? (r for random, g for greedy): ")
         while True:
-            step_strategy = input("What step strategy? (r for random, g for greedy ")
+            step_strategy = input("")
             if step_strategy == "r" or step_strategy == "g":
                 break
 
         if step_strategy == "g":
-            while True:
-                care = float(input("What is the care factor? (float): "))
-                if care:
-                    break
+            print("Do you want to want the care factor to be 0? (y for yes)")
+            use_care = input("")
+            if use_care == "y":
+                care = 0
+            else:
+                print("Please give the care factor value now (float): ")
+                while True:
+                    care = float(input(""))
+                    if care:
+                        break
+        else:
+            care = 0
+
+    while True:
+        print()
+        print("What would you like to do?")
+        print("Type speedtest to do a speedtest with your input, it will print proteins with values less than the minimum stability you have given.")
+        print("Type best to find the best configuration of your input.")
+        print("Type histogram to create a histogram of the stabilities found.")
+        action = input("")
+
+        if algorithm == "r":
+            if action == "speedtest":
+                speedtest(protein, "r", minimum_stability, iterations=amount)
+            elif action == "best":
+                get_best_config(protein, "random", amount)
+                print("Do you want to plot the path found? (y for yes)")
+                plot = input("")
+
+                if plot == "y":
+                    plot_path(protein)
+            elif action == "histogram":
+                get_stability_histogram(protein, "random", amount)
+
+        elif algorithm == "g":
+            if action == "speedtest":
+                speedtest(protein, "g", minimum_stability, iterations=amount, greed=greed, care=care)
+            elif action == "best":
+                get_best_config(protein, "greedy", amount, greed=greed, care=care)
+                print("Do you want to plot the path found? (y for yes)")
+                plot = input("")
+
+                if plot == "y":
+                    plot_path(protein)
+            elif action == "histogram":
+                get_stability_histogram(protein, "greedy", amount, greed=greed, care=care)
+
+        elif algorithm == "c":
+            if action == "speedtest":
+                speedtest(protein, "c", minimum_stability, iterations=amount, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy="g")
+            elif action == "best":
+                get_best_config(protein, "chunky path", amount, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
+                print("Do you want to plot the path found? (y for yes)")
+                plot = input("")
+
+                if plot == "y":
+                    plot_path(protein)
+            elif action == "histogram":
+                get_stability_histogram(protein, "chunky path", amount, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)

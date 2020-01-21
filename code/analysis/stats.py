@@ -12,6 +12,8 @@ from code.classes.protein import Protein
 from copy import deepcopy
 import numpy as np
 import pandas as pd
+import time
+import operator
 
 amino_colors = {
     'P': 'black',
@@ -117,6 +119,7 @@ def plot_path(protein):
 
     if protein.dim3:
         ax.plot(x_positions, y_positions, z_positions, 'ko-', markerfacecolor='white', markersize=15)
+        plt.axis('off')
     else:
         plt.plot(x_positions, y_positions, 'ko-', markerfacecolor='white', markersize=15)
         plt.axis('off')
@@ -183,5 +186,34 @@ def care_histogram(protein, iterations, strategy, percentage, chunk_size = 6, ch
         plt.subplot(3, 4, count)
         plt.title(f'care = {i / 10}, mean = {mean}')
         plt.hist(df['Stability'], bins=n_bins, color='green')
+        plt.xlim(xmin=-45, xmax = 0)
+        plt.ylim(ymin=0, ymax=150)
 
     plt.show()
+
+def speedtest(protein, strategy, minimum_stability, default = "y", iterations = 100, greed = 1, care = 0, chunk_size = 6, chunk_iterations = 100, step_strategy = "g"):
+
+    start = time.time()
+    counter = 0
+    for i in range(iterations):
+        if strategy == "g":
+            generate_greedy_path(protein)
+        elif strategy == "c":
+            if default == "y":
+                generate_chunky_path(protein)
+            else:
+                generate_chunky_path(protein, chunk_size, chunk_iterations, step_strategy, care)
+        else:
+            generate_random_path(protein)
+
+        if protein.stability < minimum_stability:
+            print("protein: ")
+            print(protein)
+            print()
+
+            counter += 1
+
+    end = time.time()
+    print(f"Amount of results: {counter}")
+    print(f"Time passed: {end - start}")
+    print()
