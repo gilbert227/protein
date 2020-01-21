@@ -46,7 +46,7 @@ class Protein:
 
     def add_step(self, amino, step):
         ''' adds step to path and updates relevant attributes '''
-        if self.symmetric == True and step[-1] != 0:
+        if self.symmetric and ((not self.dim3 and step[0] != 0) or (self.dim3 and (step[0] !=0 or step[1] != 0))):
             # path no longer coincides with vertical-axis, symmetric is now false
             self.symmetric = False
         self.stability += get_added_stability(self, amino, step)[0]
