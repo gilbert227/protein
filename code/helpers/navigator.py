@@ -69,24 +69,32 @@ def get_added_stability(protein, amino, step, care=0):
     return added_stability, weight
 
 
-def get_path_directions(path):
+def get_path_directions(protein):
     '''
     converts path into format as specified by case assignment (TODO: add file writer)
     directions between subsequent aminoacids are signified by numbers, where:
        -1, 1 represent unit steps along the x-axis
        -2, 2 represent unit steps along the y-axis
+       -3, 3 represent unit steps along the z-axis if protein in 3D
        0 terminates the sequence
     '''
     # obtain positions from path
-    positions = [point[1] for point in path]
+    positions = [point[1] for point in protein.path]
 
     directions = []
     for i in range(len(positions)-1):
         # append appropriate number for each step's direction
-        directions.append(
-            (-1) * (positions[i + 1][0] - positions[i][0]) +
-            (-2) * (positions[i + 1][1] - positions[i][1])
-        )
+        if not protein.dim3:
+            directions.append(
+                (1) * (positions[i + 1][0] - positions[i][0]) +
+                (2) * (positions[i + 1][1] - positions[i][1])
+            )
+        else:
+            directions.append(
+                (1) * (positions[i + 1][0] - positions[i][0]) +
+                (2) * (positions[i + 1][1] - positions[i][1]) +
+                (3) * (positions[i + 1][2] - positions[i][2])
+            )
     # append 0 to terminate the sequence
     directions.append(0)
     return directions

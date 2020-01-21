@@ -9,11 +9,13 @@ from code.algorithms.greedy_path import generate_greedy_path
 from code.algorithms.random_path import generate_random_path
 from code.algorithms.chunky_path import generate_chunky_path
 from code.classes.protein import Protein
+from code.helpers.navigator import *
 from copy import deepcopy
 import numpy as np
 import pandas as pd
 import time
 import operator
+import csv
 
 amino_colors = {
     'P': 'black',
@@ -192,6 +194,9 @@ def care_histogram(protein, iterations, strategy, percentage, chunk_size = 6, ch
     plt.show()
 
 def speedtest(protein, strategy, minimum_stability, default = "y", iterations = 100, greed = 1, care = 0, chunk_size = 6, chunk_iterations = 100, step_strategy = "g"):
+    '''
+
+    '''
 
     start = time.time()
     counter = 0
@@ -217,3 +222,18 @@ def speedtest(protein, strategy, minimum_stability, default = "y", iterations = 
     print(f"Amount of results: {counter}")
     print(f"Time passed: {end - start}")
     print()
+
+def csv_compiler(protein):
+    '''
+    makes an csv file with protein stats
+    '''
+
+    directions = get_path_directions(protein)
+
+    with open('protein.csv', 'w') as csvfile:
+        fieldnames = ['amino', 'direction', 'coordinates']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for number, amino in enumerate(protein.sequence):
+            writer.writerow({'amino': amino, 'direction': directions[number], 'coordinates': protein.path[number][1]})

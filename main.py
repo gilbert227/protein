@@ -56,9 +56,16 @@ if default == "y":
     print(protein)
     print()
 
-    plot = input("Do you want a plot of your result? (y for yes)")
-    if plot == "y":
-        plot_path(protein)
+    print("Type plot to plot this path, or type csv to save the results in a csv file called protein.csv, or anything else to quit.")
+    while True:
+        action_best = input("")
+
+        if action_best == "plot":
+            plot_path(protein)
+        elif action_best == "csv":
+            csv_compiler(protein)
+        else:
+            break
 
 else:
     print("Please insert the following details with care.")
@@ -132,20 +139,37 @@ else:
         print()
         print("What would you like to do?")
         print("Type speedtest to do a speedtest with your input, it will print proteins with values less than the minimum stability you have given.")
-        print("Type best to find the best configuration of your input.")
+        print("Type best to find the best generated path with the input you have provided.")
         print("Type histogram to create a histogram of the stabilities found.")
         action = input("")
+        print()
+
+        if action == "speedtest" or action == "best" or action == "histogram":
+            print("Understood.")
+        else:
+            print("Instructions unclear.")
+
+        print()
 
         if algorithm == "r":
             if action == "speedtest":
                 speedtest(protein, "r", minimum_stability, iterations=amount)
             elif action == "best":
-                get_best_config(protein, "random", amount)
-                print("Do you want to plot the path found? (y for yes)")
-                plot = input("")
+                best = get_best_config(protein, "random", amount)
+                print(best)
+                print()
 
-                if plot == "y":
-                    plot_path(protein)
+                print("Type plot to plot this path, or type csv to save the results in a csv file called protein.csv, or anything else to continue with something else.")
+                while True:
+                    action_best = input("")
+
+                    if action_best == "plot":
+                        plot_path(protein)
+                    elif action_best == "csv":
+                        csv_compiler(protein)
+                    else:
+                        break
+
             elif action == "histogram":
                 get_stability_histogram(protein, "random", amount)
 
@@ -153,12 +177,21 @@ else:
             if action == "speedtest":
                 speedtest(protein, "g", minimum_stability, iterations=amount, greed=greed, care=care)
             elif action == "best":
-                get_best_config(protein, "greedy", amount, greed=greed, care=care)
-                print("Do you want to plot the path found? (y for yes)")
-                plot = input("")
+                best = get_best_config(protein, "greedy", amount, greed=greed, care=care)
+                print(best)
+                print()
 
-                if plot == "y":
-                    plot_path(protein)
+                print("Type plot to plot this path, or type csv to save the results in a csv file called protein.csv, or anything else to continue with something else.")
+                while True:
+                    action_best = input("")
+
+                    if action_best == "plot":
+                        plot_path(protein)
+                    elif action_best == "csv":
+                        csv_compiler(protein)
+                    else:
+                        break
+
             elif action == "histogram":
                 get_stability_histogram(protein, "greedy", amount, greed=greed, care=care)
 
@@ -166,11 +199,20 @@ else:
             if action == "speedtest":
                 speedtest(protein, "c", minimum_stability, iterations=amount, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy="g")
             elif action == "best":
-                get_best_config(protein, "chunky path", amount, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
-                print("Do you want to plot the path found? (y for yes)")
-                plot = input("")
+                best = get_best_config(protein, "chunky path", amount, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
+                print(best)
+                print()
 
-                if plot == "y":
-                    plot_path(protein)
+                print("Type plot to plot this path, or type csv to save the results in a csv file called protein.csv, or anything else to continue with something else.")
+                while True:
+                    action_best = input("")
+
+                    if action_best == "plot":
+                        plot_path(protein)
+                    elif action_best == "csv":
+                        csv_compiler(protein)
+                    else:
+                        break
+
             elif action == "histogram":
                 get_stability_histogram(protein, "chunky path", amount, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
