@@ -88,78 +88,40 @@ def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chun
     skewness = (skew_num / n) / (skew_denom/(n-1))**(3/2)
     return mean, skewness
 
-def estimate_max_stability(protein):
-    pass
-
 def plot_path(protein):
-    ''' visualisation of folded protein '''
+    ''' visualisation of folded protein, depending on 3D '''
     x_positions = []
     y_positions = []
+    if protein.dim3:
+        z_positions = []
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
     point_markers = []
+
+    # create the coordinates and add the specific amino value to it
     for amino, position in protein.path:
         x = position[0]
         y = position[1]
         x_positions.append(x)
         y_positions.append(y)
 
-        plt.text(x, y, amino, horizontalalignment='center', verticalalignment='center', color=amino_colors[amino])
-    plt.title(f"stability: {protein.stability}")
-    plt.plot(x_positions, y_positions, 'ko-', markerfacecolor='white', markersize=15)
-    plt.axis('off')
-    plt.show()
-
-def plot_3d_path(protein):
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    x_positions = []
-    y_positions = []
-    z_positions = []
-    point_markers = []
-    for amino, position in protein.path:
-        x = position[0]
-        y = position[1]
-        z = position[2]
-        x_positions.append(x)
-        y_positions.append(y)
-        z_positions.append(z)
-
-        ax.text(x, y, z, amino, horizontalalignment='center', verticalalignment='center', color=amino_colors[amino])
-
-    x_array = np.asarray(x_positions)
-    y_array = np.asarray(y_positions)
-    z_array = np.asarray(z_positions)
-
+        if protein.dim3:
+            z = position[2]
+            z_positions.append(z)
+            ax.text(x, y, z, amino, horizontalalignment='center', verticalalignment='center', color=amino_colors[amino])
+        else:
+            plt.text(x, y, amino, horizontalalignment='center', verticalalignment='center', color=amino_colors[amino])
 
     plt.title(f"stability: {protein.stability}")
-    ax.plot(x_array, y_array, z_array, 'ko-', markerfacecolor='white', markersize=15)
-    
+
+    if protein.dim3:
+        ax.plot(x_positions, y_positions, z_positions, 'ko-', markerfacecolor='white', markersize=15)
+    else:
+        plt.plot(x_positions, y_positions, 'ko-', markerfacecolor='white', markersize=15)
+        plt.axis('off')
+
     plt.show()
-
-
-def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
-    stabilities = []
-
-    for i in range(iterations):
-        generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy)
-        stabilities.append(protein.stability)
-
-    n_bins = len(set(stabilities))
-    plt.hist(stabilities, bins=n_bins)
-    plt.show()
-
-    n = len(stabilities)
-    mean = sum(stabilities)/n
-    skew_num = 0
-    skew_denom = 0
-    for stability in stabilities:
-        skew_num += (stability - mean)**3
-        skew_denom += (stability - mean)**2
-    skewness = (skew_num / n) / (skew_denom/(n-1))**(3/2)
-    return mean, skewness
-
-def estimate_max_stability(protein):
-    pass
-
 
 def comparing_test(protein, strategy, iterations, greed=1, care_hist=True, freq_table=True, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
 
