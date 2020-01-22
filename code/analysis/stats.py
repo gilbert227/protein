@@ -25,13 +25,15 @@ amino_colors = {
     'C': 'green'
 }
 
-def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
+def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random", depth = 3):
     if strategy == "random":
         generate_random_path(protein)
     elif strategy == "greedy":
         generate_greedy_path(protein, greed, care)
     elif strategy == "chunky path":
         generate_chunky_path(protein, chunk_size, chunk_iterations, step_strategy, care)
+    elif strategy == "forward search":
+        return forward_search(protein, depth)
 
 def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
     ''' returns first configuration not in configs '''
@@ -42,7 +44,7 @@ def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, 
             return (i, config, True)
     return (None, None, False)
 
-def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
+def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1, care=0, chunk_size=6, chunk_iterations=500, step_strategy="random", depth=3):
     ''' get number of duplicates generated between found unique states '''
     configs = []
     separating_duplicates = []
@@ -60,12 +62,23 @@ def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1,
 
     return separating_duplicates, len(separating_duplicates)
 
-def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
+def get_best_config(protein, strategy, iterations, greed=1, care=0.2, chunk_size=6, chunk_iterations=500, step_strategy="greedy", depth=3):
     best_stability = 0
     best_config = None
+    
+    if strategy == 'forward search':
+        # temporary fix for forward search: TODO: fix this issue
+        for i in range(iterations):
+            new_protein = generate_path(protein, 'forward search', iterations, depth=depth)
+            stability = new_protein.stability
+            print(stability)
+            if stability < best_stability:
+                best_stability = stability
+                best_config = deepcopy(new_protein)
+        return best_config
 
     for i in range(iterations):
-        generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy)
+        generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy, depth)
         stability = protein.stability
         if stability < best_stability:
             best_stability = stability
@@ -73,7 +86,7 @@ def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size =
 
     return best_config
 
-def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
+def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random", depth=3):
     stabilities = []
 
     for i in range(iterations):
