@@ -19,6 +19,7 @@ while True:
         print()
         break
 
+# promt for 3D
 print("Do you want to use 3D? (y for yes) ")
 while True:
     dimension3 = input("")
@@ -26,6 +27,7 @@ while True:
         print()
         break
 
+# create protein class
 if dimension3 == "y":
     protein = Protein(protein_string, dim3=True)
 else:
@@ -45,6 +47,7 @@ print("Do you want use default values and run a single time? (y for default)")
 default = input("")
 print()
 
+# run the chosen algorithm a single time with default values
 if default == "y":
     if algorithm == "r":
         generate_random_path(protein)
@@ -67,6 +70,7 @@ if default == "y":
         else:
             break
 
+# prompt for specific variables, according to the chosen strategy
 else:
     print("Please insert the following details with care.")
 
@@ -135,16 +139,19 @@ else:
         else:
             care = 0
 
+    # ask user what to do with the variables he has given
     while True:
         print()
         print("What would you like to do?")
         print("Type speedtest to do a speedtest with your input, it will print proteins with values less than the minimum stability you have given.")
         print("Type best to find the best generated path with the input you have provided.")
         print("Type histogram to create a histogram of the stabilities found.")
+        print("Type change to alter your variables. Note that this implies that you have to change everything up to the algorithm")
+        print("Type quit to quit the program.")
         action = input("")
         print()
 
-        if action == "speedtest" or action == "best" or action == "histogram":
+        if action == "speedtest" or action == "best" or action == "histogram" or action == "change" or action == "quit":
             print("Understood.")
         else:
             print("Instructions unclear.")
@@ -216,3 +223,81 @@ else:
 
             elif action == "histogram":
                 get_stability_histogram(protein, "chunky path", amount, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
+
+        if action == "change":
+            print("What algorithm do you want to perform on this protein?")
+            print("Insert r for random, g for greedy and c for chunky path.")
+
+            while True:
+                algorithm = input("")
+                if algorithm == "r" or algorithm == "g" or algorithm == "c":
+                    print("You have chosen.")
+                    print()
+                    break
+
+            print("What is the amount of iterations? (positive integer): ")
+            while True:
+                amount = int(input(""))
+                if amount > 0:
+                    break
+
+            print("What is the minimum required stability to print to path? (integer, used for speedtest)")
+            if amount > 1:
+                while True:
+                    minimum_stability = int(input(""))
+                    if minimum_stability:
+                        break
+
+            if algorithm == "g":
+                print("What is the greed factor? (float): ")
+                while True:
+                    greed = float(input(""))
+                    if greed:
+                        break
+
+                print("Do you want to want the care factor to be 0? (y for yes)")
+                use_care = input("")
+                if use_care == "y":
+                    care = 0
+                else:
+                    print("Please give the care factor value now (float): ")
+                    while True:
+                        care = float(input(""))
+                        if care:
+                            break
+
+            if algorithm == "c":
+                print("What is the chunk size? (positive integer): ")
+                while True:
+                    chunk_size = int(input(""))
+                    if chunk_size > 0:
+                        break
+
+                print("How many chunk iterations? (positive integer): ")
+                while True:
+                    chunk_iterations = int(input(""))
+                    if chunk_iterations > 0:
+                        break
+
+                print("What step strategy? (r for random, g for greedy): ")
+                while True:
+                    step_strategy = input("")
+                    if step_strategy == "r" or step_strategy == "g":
+                        break
+
+                if step_strategy == "g":
+                    print("Do you want to want the care factor to be 0? (y for yes)")
+                    use_care = input("")
+                    if use_care == "y":
+                        care = 0
+                    else:
+                        print("Please give the care factor value now (float): ")
+                        while True:
+                            care = float(input(""))
+                            if care:
+                                break
+                else:
+                    care = 0
+
+        if action == "quit":
+            break
