@@ -53,13 +53,5 @@ class Protein:
         self.amino_positions[amino].append(step)
         self.path.append([amino, step])
 
-    def add_chunk(self, best_path, n):
-        '''
-        adds multiple pre-defined steps to the path
-        '''
-        for amino, step in best_path[-n:]:
-            self.add_step(amino, step)
-
-
     def __str__(self):
         return f"path:{self.path}, stability:{self.stability}"
