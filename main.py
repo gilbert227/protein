@@ -171,9 +171,9 @@ else:
                     action_best = input("")
 
                     if action_best == "plot":
-                        plot_path(protein)
+                        plot_path(best)
                     elif action_best == "csv":
-                        csv_compiler(protein)
+                        csv_compiler(best)
                     else:
                         break
 
@@ -193,9 +193,9 @@ else:
                     action_best = input("")
 
                     if action_best == "plot":
-                        plot_path(protein)
+                        plot_path(best)
                     elif action_best == "csv":
-                        csv_compiler(protein)
+                        csv_compiler(best)
                     else:
                         break
 
@@ -215,9 +215,9 @@ else:
                     action_best = input("")
 
                     if action_best == "plot":
-                        plot_path(protein)
+                        plot_path(best)
                     elif action_best == "csv":
-                        csv_compiler(protein)
+                        csv_compiler(best)
                     else:
                         break
 
