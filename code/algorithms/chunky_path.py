@@ -79,7 +79,8 @@ def generate_chunky_path(protein, chunk_size = 6, iterations = 500, step_strateg
             break
         else:
             # add the best path to the protein object
-            protein.add_chunk(best_path, chunk_size)
+            for amino, step in best_path[-chunk_size:]:
+                protein.add_step(amino, step)
             start += chunk_size
 
     # if there are remaining letters, add them by using a random or greedy method
