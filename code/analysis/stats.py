@@ -8,7 +8,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from code.algorithms.greedy_path import generate_greedy_path
 from code.algorithms.random_path import generate_random_path
 from code.algorithms.chunky_path import generate_chunky_path
-from code.algorithms.weighted_construction import construct_weighted_path
+from code.algorithms.forward_search import forward_search
 from code.classes.protein import Protein
 from code.helpers.navigator import *
 from copy import deepcopy
