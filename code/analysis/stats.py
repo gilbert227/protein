@@ -20,9 +20,9 @@ import csv
 import ast
 
 amino_colors = {
-    'P': 'black',
-    'H': 'blue',
-    'C': 'red'
+    'P': 'blue',
+    'H': 'red',
+    'C': 'green'
 }
 
 def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
@@ -103,8 +103,6 @@ def plot_path(protein):
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
 
-    point_markers = []
-
     # create the coordinates and add the specific amino value to it
     for amino, position in protein.path:
         x = position[0]
@@ -115,19 +113,17 @@ def plot_path(protein):
         if protein.dim3:
             z = position[2]
             z_positions.append(z)
-            ax.text(x, y, z, amino, horizontalalignment='center', verticalalignment='center', color=amino_colors[amino])
+            ax.scatter(x, y, z, s=140, marker='o', linewidths=1, color=amino_colors[amino])
         else:
-            plt.text(x, y, amino, horizontalalignment='center', verticalalignment='center', color=amino_colors[amino])
-
-    plt.title(f"stability: {protein.stability}")
+            plt.scatter(x, y, s=160, marker='o', linewidths=1, color=amino_colors[amino])
 
     if protein.dim3:
-        ax.plot(x_positions, y_positions, z_positions, 'ko-', markerfacecolor='white', markersize=15)
-        plt.axis('off')
+        ax.plot(x_positions, y_positions, z_positions, 'ko-', alpha=0.4, ms=1)
     else:
-        plt.plot(x_positions, y_positions, 'ko-', markerfacecolor='white', markersize=15)
-        plt.axis('off')
+        plt.plot(x_positions, y_positions, 'ko-', alpha=0.4, ms=1)
 
+    plt.title(f"stability: {protein.stability}")
+    plt.axis('off')
     plt.show()
 
 def comparing_test(protein, strategy, iterations, greed=1, care_hist=True, freq_table=True, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
