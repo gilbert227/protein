@@ -87,30 +87,6 @@ def get_best_config(protein, strategy, iterations, greed=1, care=0.2, chunk_size
 
     protein = deepcopy(best_condig)
 
-<<<<<<< HEAD
-def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random", depth=3):
-    stabilities = []
-
-    for i in range(iterations):
-        generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy)
-        stabilities.append(protein.stability)
-
-    n_bins = len(set(stabilities))
-    plt.hist(stabilities, bins=n_bins)
-    plt.show()
-
-    n = len(stabilities)
-    mean = sum(stabilities)/n
-    skew_num = 0
-    skew_denom = 0
-    for stability in stabilities:
-        skew_num += (stability - mean)**3
-        skew_denom += (stability - mean)**2
-    skewness = (skew_num / n) / (skew_denom/(n-1))**(3/2)
-    return mean, skewness
-=======
->>>>>>> 0b3b4b2f04e3cfad004e1e4b2ea90acaa9814b4a
-
 def plot_path(protein):
     ''' visualisation of folded protein, depending on 3D '''
     x_positions = []
