@@ -84,13 +84,6 @@ else:
         if amount > 0:
             break
 
-    print("What is the minimum required stability to print to path? (integer, used for speedtest)")
-    if amount > 1:
-        while True:
-            minimum_stability = int(input(""))
-            if minimum_stability:
-                break
-
     if algorithm == "g":
         print("What is the greed factor? (float): ")
         while True:
