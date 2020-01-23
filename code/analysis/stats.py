@@ -63,11 +63,7 @@ def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1,
 
     return separating_duplicates, len(separating_duplicates)
 
-<<<<<<< HEAD
-def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "random"):
-=======
 def get_best_config(protein, strategy, iterations, greed=1, care=0.2, chunk_size=6, chunk_iterations=500, step_strategy="greedy", depth=3):
->>>>>>> e120f4229c273d93a81e5c9e47c2dc28a5275343
     best_stability = 0
     best_config = None
     
@@ -91,11 +87,7 @@ def get_best_config(protein, strategy, iterations, greed=1, care=0.2, chunk_size
 
     protein = deepcopy(best_condig)
 
-<<<<<<< HEAD
-def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "random"):
-=======
 def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random", depth=3):
->>>>>>> e120f4229c273d93a81e5c9e47c2dc28a5275343
     stabilities = []
 
     for i in range(iterations):
@@ -188,95 +180,80 @@ def care_histogram(protein, iterations, strategy, percentage, chunk_size = 6, ch
 
     plt.show()
 
-def comparing_test(protein, iterations_random, iterations_greedy, iterations_chunky, care):
+def comparing_test(protein, it_random=0, care_random=0, it_greedy=0, care_greedy=0, it_chunky=0, care_chunky=0):
 
-    df = pd.DataFrame()
+    # random 
+    df_random = pd.DataFrame()
+    stabilities = []
+    for i in range(it_random):
+        generate_path(protein, 'random', care=care_random)
+        stabilities.append(protein.stability)
+
+    stabilities.sort()
+    dict_stability = {'random': stabilities}
+
+    df_random = df_random.assign(**dict_stability)
+
 
     # greedy
+    df_greedy = pd.DataFrame()
     stabilities = []
-    for i in range(iterations_greedy):
-        generate_path(protein, 'greedy', care=0)
+    for i in range(it_greedy):
+        generate_path(protein, 'greedy', care=care_greedy)
         stabilities.append(protein.stability)
 
     stabilities.sort()
-    dict_stability = {'Greedy': stabilities}
+    dict_stability = {'greedy': stabilities}
 
-    df = df.assign(**dict_stability)
+    df_greedy = df_greedy.assign(**dict_stability)
 
-    # greedy care=0.3
-    stabilities = []
-    for i in range(iterations_greedy):
-        generate_path(protein, 'greedy', care=0.3)
-        stabilities.append(protein.stability)
-
-    stabilities.sort()
-    dict_stability = {'GreedyC': stabilities}
-
-    df = df.assign(**dict_stability)
-
-    # random
-    stabilities = []
-    for i in range(iterations_random):
-        generate_path(protein, 'random', care=care)
-        stabilities.append(protein.stability)
-
-    stabilities.sort()
-    dict_stability = {'Random': stabilities}
-
-    df = df.assign(**dict_stability)
-
+   
     # chunky path
     df_chunky = pd.DataFrame()
     stabilities = []
-    for i in range(iterations_chunky):
-        generate_path(protein, 'chunky path', care=0)
+    for i in range(it_chunky):
+        generate_path(protein, 'chunky path', care=care_chunky)
         stabilities.append(protein.stability)
 
     stabilities.sort()
-
-    dict_stability = {'Chunky': stabilities}
+    dict_stability = {'chunky': stabilities}
 
     df_chunky = df_chunky.assign(**dict_stability)
 
-    # chunky path care=0.3
-    stabilities = []
-    for i in range(iterations_chunky):
-        generate_path(protein, 'chunky path', care=0.1)
-        stabilities.append(protein.stability)
-
-    stabilities.sort()
-    dict_stability = {'ChunkyC': stabilities}
-    df_chunky = df_chunky.assign(**dict_stability)
-
-    # get best value
-    best_norm = df.iloc[0].min()
-    best_chunkyC = df_chunky['ChunkyC'].iloc[0]
-    best_chunky = df_chunky['Chunky'].iloc[0]
-    if best_chunkyC < best_chunky:
-        best = best_chunkyC
-        alg = 'chunkyC'
+    # get best solution
+    if it_greedy > 0:
+        best_greedy = int(df_greedy.iloc[0])
     else:
-        best = best_chunky
-        alg = 'chunky'
+        best_greedy = 0
+    if it_chunky > 0:
+        best_chunky = int(df_chunky.iloc[0])
+    else:
+        best_chunky = 0
+    if it_random > 0:
+        best_random = int(df_random.iloc[0])
+    else:
+        best_random = 0
 
-    if best > best_norm:
-        best = best_norm
-        alg = 'norm'
+    if best_random < best_greedy and best_random < best_chunky:
+        best_solution = best_random
+        algorithm = 'Random'
+    elif best_greedy < best_random and best_greedy < best_chunky:
+        best_solution = best_greedy
+        algorithm = 'Greedy'
+    else:
+        best_solution = best_chunky
+        algorithm = 'Chunky Path'
 
     # Draw Plot
     plt.figure(figsize=(16,10), dpi= 80)
-    sns.kdeplot(df["Random"], shade=True, color="g", label="Random", alpha=.7)
-    sns.kdeplot(df["Greedy"], shade=True, color="deeppink", label="Greedy", alpha=.7)
-    sns.kdeplot(df["GreedyC"], shade=True, color="orange", label="Greedy, care=0.3", alpha=.7)
-    sns.kdeplot(df_chunky["Chunky"], shade=True, color="dodgerblue", label="Chunky", alpha=.7)
-    sns.kdeplot(df_chunky["ChunkyC"], shade=True, color="red", label="ChunkyC", alpha=.7)
+    sns.kdeplot(df_random["random"], shade=True, color="red", label=f'Random, care={care_random}', alpha=.7)
+    sns.kdeplot(df_greedy["greedy"], shade=True, color="deeppink", label=f'Greedy, care={care_greedy}', alpha=.7)
+    sns.kdeplot(df_chunky["chunky"], shade=True, color="orange", label=f'Chunky, care={care_chunky}', alpha=.7)
 
     # Decoration
-    plt.title(f'Density Plot of algorithms, {best} {alg}', fontsize=22)
+    plt.title(f'Density Plot of algorithms, best solution={best_solution} from {algorithm}', fontsize=22)
     plt.legend()
     plt.show()
-
-    print(df)
 
 def speedtest(protein, strategy, minimum_stability, default = "y", iterations = 100, greed = 1, care = 0, chunk_size = 6, chunk_iterations = 100, step_strategy = "g"):
     '''
@@ -322,10 +299,6 @@ def csv_compiler(protein):
         writer.writeheader()
         for number, amino in enumerate(protein.sequence):
             writer.writerow({'amino': amino, 'direction': directions[number], 'coordinates': protein.path[number][1]})
-<<<<<<< HEAD
-    
-    return protein
-=======
 
 def csv_reader():
     '''
@@ -356,4 +329,3 @@ def csv_reader():
     for amino in protein.sequence[2:]:
         protein.add_step(amino, coordinates[number])
         number += 1
->>>>>>> e120f4229c273d93a81e5c9e47c2dc28a5275343
