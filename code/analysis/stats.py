@@ -265,3 +265,5 @@ def csv_reader():
     for amino in protein.sequence[2:]:
         protein.add_step(amino, coordinates[number])
         number += 1
+
+    return protein
