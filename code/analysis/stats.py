@@ -87,6 +87,7 @@ def get_best_config(protein, strategy, iterations, greed=1, care=0.2, chunk_size
 
     protein = deepcopy(best_condig)
 
+<<<<<<< HEAD
 def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random", depth=3):
     stabilities = []
 
@@ -107,6 +108,8 @@ def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chun
         skew_denom += (stability - mean)**2
     skewness = (skew_num / n) / (skew_denom/(n-1))**(3/2)
     return mean, skewness
+=======
+>>>>>>> 0b3b4b2f04e3cfad004e1e4b2ea90acaa9814b4a
 
 def plot_path(protein):
     ''' visualisation of folded protein, depending on 3D '''
@@ -314,6 +317,11 @@ def csv_compiler(protein):
         writer.writeheader()
         for number, amino in enumerate(protein.sequence):
             writer.writerow({'amino': amino, 'direction': directions[number], 'coordinates': protein.path[number][1]})
+<<<<<<< HEAD
+=======
+
+    return protein
+>>>>>>> 0b3b4b2f04e3cfad004e1e4b2ea90acaa9814b4a
 
 def csv_reader():
     '''
@@ -345,7 +353,10 @@ def csv_reader():
         protein.add_step(amino, coordinates[number])
         number += 1
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     return protein
 =======
 >>>>>>> 14f533c5193ed4a05cb66d04e477d9cd13a4cfa1
+=======
+>>>>>>> 0b3b4b2f04e3cfad004e1e4b2ea90acaa9814b4a
