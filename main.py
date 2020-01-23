@@ -145,7 +145,6 @@ else:
         print("What would you like to do?")
         print("Type speedtest to do a speedtest with your input, it will print proteins with values less than the minimum stability you have given.")
         print("Type best to find the best generated path with the input you have provided.")
-        print("Type histogram to create a histogram of the stabilities found.")
         print("Type change to alter your variables. Note that this implies that you have to change everything up to the algorithm")
         print("Type quit to quit the program.")
         action = input("")
@@ -177,9 +176,6 @@ else:
                     else:
                         break
 
-            elif action == "histogram":
-                get_stability_histogram(protein, "random", amount)
-
         elif algorithm == "g":
             if action == "speedtest":
                 speedtest(protein, "g", minimum_stability, iterations=amount, greed=greed, care=care)
@@ -199,9 +195,6 @@ else:
                     else:
                         break
 
-            elif action == "histogram":
-                get_stability_histogram(protein, "greedy", amount, greed=greed, care=care)
-
         elif algorithm == "c":
             if action == "speedtest":
                 speedtest(protein, "c", minimum_stability, iterations=amount, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy="g")
@@ -220,9 +213,6 @@ else:
                         csv_compiler(best)
                     else:
                         break
-
-            elif action == "histogram":
-                get_stability_histogram(protein, "chunky path", amount, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
 
         if action == "change":
             print("What algorithm do you want to perform on this protein?")
