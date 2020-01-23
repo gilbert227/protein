@@ -8,6 +8,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from code.algorithms.greedy_path import generate_greedy_path
 from code.algorithms.random_path import generate_random_path
 from code.algorithms.chunky_path import generate_chunky_path
+from code.algorithms.forward_search import forward_search
 from code.classes.protein import Protein
 from code.helpers.navigator import *
 import seaborn as sns
@@ -17,20 +18,23 @@ import pandas as pd
 import time
 import operator
 import csv
+import ast
 
 amino_colors = {
-    'P': 'black',
-    'H': 'blue',
-    'C': 'red'
+    'P': 'blue',
+    'H': 'red',
+    'C': 'green'
 }
 
-def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
+def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random", depth = 3):
     if strategy == "random":
         generate_random_path(protein)
     elif strategy == "greedy":
         generate_greedy_path(protein, greed, care)
     elif strategy == "chunky path":
         generate_chunky_path(protein, chunk_size, chunk_iterations, step_strategy, care)
+    elif strategy == "forward search":
+        return forward_search(protein, depth)
 
 def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
     ''' returns first configuration not in configs '''
@@ -41,7 +45,7 @@ def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, 
             return (i, config, True)
     return (None, None, False)
 
-def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
+def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1, care=0, chunk_size=6, chunk_iterations=500, step_strategy="random", depth=3):
     ''' get number of duplicates generated between found unique states '''
     configs = []
     separating_duplicates = []
@@ -59,12 +63,27 @@ def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1,
 
     return separating_duplicates, len(separating_duplicates)
 
+<<<<<<< HEAD
 def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "random"):
+=======
+def get_best_config(protein, strategy, iterations, greed=1, care=0.2, chunk_size=6, chunk_iterations=500, step_strategy="greedy", depth=3):
+>>>>>>> e120f4229c273d93a81e5c9e47c2dc28a5275343
     best_stability = 0
     best_config = None
+    
+    if strategy == 'forward search':
+        # temporary fix for forward search: TODO: fix this issue
+        for i in range(iterations):
+            new_protein = generate_path(protein, 'forward search', iterations, depth=depth)
+            stability = new_protein.stability
+            print(stability)
+            if stability < best_stability:
+                best_stability = stability
+                best_config = deepcopy(new_protein)
+        return best_config
 
     for i in range(iterations):
-        generate_path(protein, strategy, greed, care)
+        generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy, depth)
         stability = protein.stability
         if stability < best_stability:
             best_stability = stability
@@ -72,7 +91,11 @@ def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size =
 
     protein = deepcopy(best_condig)
 
+<<<<<<< HEAD
 def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "random"):
+=======
+def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random", depth=3):
+>>>>>>> e120f4229c273d93a81e5c9e47c2dc28a5275343
     stabilities = []
 
     for i in range(iterations):
@@ -102,8 +125,6 @@ def plot_path(protein):
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
 
-    point_markers = []
-
     # create the coordinates and add the specific amino value to it
     for amino, position in protein.path:
         x = position[0]
@@ -114,19 +135,17 @@ def plot_path(protein):
         if protein.dim3:
             z = position[2]
             z_positions.append(z)
-            ax.text(x, y, z, amino, horizontalalignment='center', verticalalignment='center', color=amino_colors[amino])
+            ax.scatter(x, y, z, s=140, marker='o', linewidths=1, color=amino_colors[amino])
         else:
-            plt.text(x, y, amino, horizontalalignment='center', verticalalignment='center', color=amino_colors[amino])
-
-    plt.title(f"stability: {protein.stability}")
+            plt.scatter(x, y, s=160, marker='o', linewidths=1, color=amino_colors[amino])
 
     if protein.dim3:
-        ax.plot(x_positions, y_positions, z_positions, 'ko-', markerfacecolor='white', markersize=15)
-        plt.axis('off')
+        ax.plot(x_positions, y_positions, z_positions, 'ko-', alpha=0.4, ms=1)
     else:
-        plt.plot(x_positions, y_positions, 'ko-', markerfacecolor='white', markersize=15)
-        plt.axis('off')
+        plt.plot(x_positions, y_positions, 'ko-', alpha=0.4, ms=1)
 
+    plt.title(f"stability: {protein.stability}")
+    plt.axis('off')
     plt.show()
 
 def care_histogram(protein, iterations, strategy, percentage, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
@@ -303,5 +322,38 @@ def csv_compiler(protein):
         writer.writeheader()
         for number, amino in enumerate(protein.sequence):
             writer.writerow({'amino': amino, 'direction': directions[number], 'coordinates': protein.path[number][1]})
+<<<<<<< HEAD
     
     return protein
+=======
+
+def csv_reader():
+    '''
+    creates a protein object where the path is defined in the csv file as made by csv_compiler where the filename is protein.csv and information is given as:
+    amino, direction, coordinate
+    '''
+    sequence = ""
+    coordinates = []
+    with open('protein.csv') as csvfile:
+        csv_reader = csv.reader(csvfile, delimiter=',')
+        line_count = 0
+        for row in csv_reader:
+            if line_count > 0:
+                sequence += row[0]
+                coordinates.append(ast.literal_eval(row[2]))
+            line_count += 1
+
+    if coordinates == [] or sequence == "":
+        return f"No data found"
+
+
+    if len(coordinates[0]) == 2:
+        protein = Protein(sequence)
+    else:
+        protein = Protein(sequence, dim3=True)
+
+    number = 2
+    for amino in protein.sequence[2:]:
+        protein.add_step(amino, coordinates[number])
+        number += 1
+>>>>>>> e120f4229c273d93a81e5c9e47c2dc28a5275343
