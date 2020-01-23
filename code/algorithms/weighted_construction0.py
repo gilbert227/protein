@@ -7,13 +7,13 @@ from code.helpers.navigator import get_step_options, get_added_stability
 from copy import deepcopy
 from random import choice
 
-def look_ahead(protein, amino, step, depth, penalty, depth_multiplier):
-    ''' get cummulative score of every path in branch '''
+def look_ahead(protein, amino, step, depth, penalty, depth_multiplier, care):
+    ''' get cumulative score of every path in branch '''
     # start by calculating added stability of step, 
     # if end of search depth is reached, this is returned
-    weight = (depth_multiplier ** depth) * get_added_stability(protein, amino, step)[0]
+    weight = (depth_multiplier ** depth) * get_added_stability(protein, amino, step, care=care)[1]
 
-    if depth > 1:
+    if depth > 0:
         # copy protein
         temp_protein = deepcopy(protein)
         # get next aminoacid
@@ -22,13 +22,13 @@ def look_ahead(protein, amino, step, depth, penalty, depth_multiplier):
         options = get_step_options(temp_protein)
         if options != []:
             for step in options:
-                weight += look_ahead(temp_protein, temp_amino, step, depth-1, penalty, depth_multiplier)
+                weight += look_ahead(temp_protein, temp_amino, step, depth-1, penalty, depth_multiplier, care)
         else:
             # penalty for dead ends
             weight += penalty
     return weight
 
-def construct_weighted_path(protein, depth=1, penalty=10, depth_multiplier=10):
+def construct_weighted_path(protein, depth=1, penalty=10, depth_multiplier=10, care=0.2):
     ''' 
     constructs protein path based on prediction of scoring potential (weight) of each step
     '''
@@ -40,8 +40,8 @@ def construct_weighted_path(protein, depth=1, penalty=10, depth_multiplier=10):
         weighted_options = [[option, 0] for option in options]
         for j, step in enumerate(weighted_options):
             # calculate depth of look-ahead depending on position in sequence
-            look_depth = depth - (int((i + depth) >= length) * (length - i))
-            weighted_options[j][1] = look_ahead(protein, amino, step[0], look_depth, penalty, depth_multiplier)
+            look_depth = depth - 1 - (int((i + depth) >= length) * (length - i))
+            weighted_options[j][1] = look_ahead(protein, amino, step[0], look_depth, penalty, depth_multiplier, care)
         best_score = min([weight for option, weight in weighted_options])
         step = choice([option for option, weight in weighted_options if weight == best_score])
         protein.add_step(amino, step)

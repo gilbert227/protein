@@ -8,6 +8,7 @@ class Protein:
         self.path = []
         self.amino_positions = {}
         self.stability = 0
+        self.path_quality = 0
 
         # Symmetric keeps track of whether the full path is on the y-axis. If true, only
         # steps along the y-axis and in the positive x-direction will be considered.
@@ -44,12 +45,16 @@ class Protein:
         self.stability = 0
         self.symmetric = True
 
-    def add_step(self, amino, step):
+    def add_step(self, amino, step, care=0):
         ''' adds step to path and updates relevant attributes '''
         if self.symmetric and ((not self.dim3 and step[0] != 0) or (self.dim3 and (step[0] !=0 or step[1] != 0))):
             # path no longer coincides with vertical-axis, symmetric is now false
             self.symmetric = False
-        self.stability += get_added_stability(self, amino, step)[0]
+        
+        added_stability, added_quality = get_added_stability(self, amino, step, care)
+        self.stability += added_stability
+        self.path_quality += added_quality
+
         self.amino_positions[amino].append(step)
         self.path.append([amino, step])
 
