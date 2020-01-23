@@ -63,11 +63,7 @@ def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1,
 
     return separating_duplicates, len(separating_duplicates)
 
-<<<<<<< HEAD
-def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "random"):
-=======
 def get_best_config(protein, strategy, iterations, greed=1, care=0.2, chunk_size=6, chunk_iterations=500, step_strategy="greedy", depth=3):
->>>>>>> e120f4229c273d93a81e5c9e47c2dc28a5275343
     best_stability = 0
     best_config = None
     
@@ -91,30 +87,6 @@ def get_best_config(protein, strategy, iterations, greed=1, care=0.2, chunk_size
 
     protein = deepcopy(best_condig)
 
-<<<<<<< HEAD
-def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "random"):
-=======
-def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random", depth=3):
->>>>>>> e120f4229c273d93a81e5c9e47c2dc28a5275343
-    stabilities = []
-
-    for i in range(iterations):
-        generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy)
-        stabilities.append(protein.stability)
-
-    n_bins = len(set(stabilities))
-    plt.hist(stabilities, bins=n_bins)
-    plt.show()
-
-    n = len(stabilities)
-    mean = sum(stabilities)/n
-    skew_num = 0
-    skew_denom = 0
-    for stability in stabilities:
-        skew_num += (stability - mean)**3
-        skew_denom += (stability - mean)**2
-    skewness = (skew_num / n) / (skew_denom/(n-1))**(3/2)
-    return mean, skewness
 
 def plot_path(protein):
     ''' visualisation of folded protein, depending on 3D '''
@@ -322,10 +294,8 @@ def csv_compiler(protein):
         writer.writeheader()
         for number, amino in enumerate(protein.sequence):
             writer.writerow({'amino': amino, 'direction': directions[number], 'coordinates': protein.path[number][1]})
-<<<<<<< HEAD
-    
+
     return protein
-=======
 
 def csv_reader():
     '''
@@ -356,4 +326,3 @@ def csv_reader():
     for amino in protein.sequence[2:]:
         protein.add_step(amino, coordinates[number])
         number += 1
->>>>>>> e120f4229c273d93a81e5c9e47c2dc28a5275343
