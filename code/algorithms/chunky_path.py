@@ -5,7 +5,7 @@ import copy
 import math
 
 
-def generate_chunky_path(protein, chunk_size = 6, iterations = 500, step_strategy = "random", care = 0):
+def generate_chunky_path(protein, chunk_size = 6, iterations = 500, step_strategy = "greedy", care = 0):
 
     # this is the starting amino letter in the sequence, as the first two are already set, we start with index 2
     start = 2
