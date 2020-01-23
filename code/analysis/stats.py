@@ -293,11 +293,7 @@ def csv_compiler(protein):
         writer.writeheader()
         for number, amino in enumerate(protein.sequence):
             writer.writerow({'amino': amino, 'direction': directions[number], 'coordinates': protein.path[number][1]})
-<<<<<<< HEAD
-=======
 
-    return protein
->>>>>>> 0b3b4b2f04e3cfad004e1e4b2ea90acaa9814b4a
 
 def csv_reader():
     '''
@@ -328,11 +324,5 @@ def csv_reader():
     for amino in protein.sequence[2:]:
         protein.add_step(amino, coordinates[number])
         number += 1
-<<<<<<< HEAD
-<<<<<<< HEAD
 
     return protein
-=======
->>>>>>> 14f533c5193ed4a05cb66d04e477d9cd13a4cfa1
-=======
->>>>>>> 0b3b4b2f04e3cfad004e1e4b2ea90acaa9814b4a
