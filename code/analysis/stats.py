@@ -10,6 +10,7 @@ from code.algorithms.random_path import generate_random_path
 from code.algorithms.chunky_path import generate_chunky_path
 from code.classes.protein import Protein
 from code.helpers.navigator import *
+import seaborn as sns
 from copy import deepcopy
 import numpy as np
 import pandas as pd
@@ -58,7 +59,7 @@ def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1,
 
     return separating_duplicates, len(separating_duplicates)
 
-def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
+def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "random"):
     best_stability = 0
     best_config = None
 
@@ -69,9 +70,9 @@ def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size =
             best_stability = stability
             best_config = deepcopy(protein)
 
-    return best_config
+    protein = deepcopy(best_condig)
 
-def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
+def get_stability_histogram(protein, strategy, iterations, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "random"):
     stabilities = []
 
     for i in range(iterations):
@@ -128,70 +129,135 @@ def plot_path(protein):
 
     plt.show()
 
-def comparing_test(protein, strategy, iterations, greed=1, care_hist=True, freq_table=True, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
-
-    # GREEDY CARE ITERATIONS -----------------------------------------------------------------------
-    if care_hist == True:
-        count = 0
-
-        # use care from 0.0 to 1.1
-        for i in np.arange(0, 12, 1):
-            count += 1
-            stabilities = []
-
-            for ii in range(iterations):
-                generate_path(protein, strategy, greed=greed, care=i/10, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
-                stabilities.append(protein.stability)
-
-            df = pd.DataFrame(stabilities, columns=['Stability'])
-            df.sort_values(by=['Stability'], inplace=True)
-
-            quantile = int(df.quantile(.01))
-
-            df = df[df['Stability'] <= quantile]
-
-            n_bins = len(set(df['Stability']))
-            plt.subplot(3, 4, count)
-
-            mean = sum(stabilities)/iterations
-            plt.title(f'care = {i / 10}, mean = {mean}, quartile = {quantile}')
-            plt.hist(df['Stability'], bins=n_bins, color='green')
-
-        plt.show()
-
-def care_histogram(protein, iterations, strategy, percentage, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
+def care_histogram(protein, iterations, strategy, percentage, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
     """
     """
-    count = 0
+    df = pd.DataFrame()
 
     # use care from 0.0 to 1.1
     for i in np.arange(0, 12, 1):
-        count += 1
+        care = i/10
         stabilities = []
 
         for ii in range(iterations):
-            generate_path(protein, strategy, greed=1, care=i/10, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
+            generate_path(protein, strategy, greed=1, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
             stabilities.append(protein.stability)
 
-        # make dataframe using pandas
-        df = pd.DataFrame(stabilities, columns=['Stability'])
-        df.sort_values(by=['Stability'], inplace=True)
+        stabilities.sort()
+        dict_stability = {f'care={care}': stabilities}
 
-        # get the desired range of data
-        percentile = int(df.quantile(percentage))
-        df = df[df['Stability'] <= percentile]
+        df = df.assign(**dict_stability)
 
-        mean = sum(stabilities)/iterations
+    df.drop(df.tail(int((iterations / 100) * (1-percentage))).index,inplace=True)
+    
+    min = df.iloc[0].min()
+    max = df.iloc[-1].max()
 
-        # plot the histograms
-        n_bins = len(set(df['Stability']))
-        plt.subplot(3, 4, count)
-        plt.title(f'care = {i / 10}, mean = {mean}')
-        plt.hist(df['Stability'], bins=n_bins, color='green')
-        plt.xlim(xmin=-45, xmax = 0)
-        plt.ylim(ymin=0, ymax=150)
+    best_care = df.iloc[0].idxmin()
+
+    fig, axes = plt.subplots(nrows=3, ncols=4)
+    fig.subplots_adjust(hspace=0.5)
+    fig.suptitle(f'Distribution of different care values, best for {best_care}')
+    
+
+    for i, ax in zip(np.arange(0, 12, 1), axes.flatten()):
+        care = i/10
+        sns.distplot(df[f'care={care}'], ax=ax, bins=len(set(df[f'care={care}'])), color='green')
+        ax.set(title=f'care = {care}')
+        ax.set_xlim([min, max])
+        # plt.ylim(ymin=0, ymax=150)
 
     plt.show()
+
+def comparing_test(protein, iterations_random, iterations_greedy, iterations_chunky, care):
+
+    df = pd.DataFrame()
+
+    # greedy
+    stabilities = []
+    for i in range(iterations_greedy):
+        generate_path(protein, 'greedy', care=0)
+        stabilities.append(protein.stability)
+
+    stabilities.sort()
+    dict_stability = {'Greedy': stabilities}
+
+    df = df.assign(**dict_stability)
+
+    # greedy care=0.3
+    stabilities = []
+    for i in range(iterations_greedy):
+        generate_path(protein, 'greedy', care=0.3)
+        stabilities.append(protein.stability)
+
+    stabilities.sort()
+    dict_stability = {'GreedyC': stabilities}
+
+    df = df.assign(**dict_stability)
+
+    # random
+    stabilities = []
+    for i in range(iterations_random):
+        generate_path(protein, 'random', care=care)
+        stabilities.append(protein.stability)
+
+    stabilities.sort()
+    dict_stability = {'Random': stabilities}
+
+    df = df.assign(**dict_stability)
+
+    # chunky path
+    df_chunky = pd.DataFrame()
+    stabilities = []
+    for i in range(iterations_chunky):
+        generate_path(protein, 'chunky path', care=0)
+        stabilities.append(protein.stability)
+
+    stabilities.sort()
+
+    dict_stability = {'Chunky': stabilities}
+
+    df_chunky = df_chunky.assign(**dict_stability)
+
+    # chunky path care=0.3
+    stabilities = []
+    for i in range(iterations_chunky):
+        generate_path(protein, 'chunky path', care=0.1)
+        stabilities.append(protein.stability)
+
+    stabilities.sort()
+    dict_stability = {'ChunkyC': stabilities}
+    df_chunky = df_chunky.assign(**dict_stability)
+
+    # get best value
+    best_norm = df.iloc[0].min()
+    best_chunkyC = df_chunky['ChunkyC'].iloc[0]
+    best_chunky = df_chunky['Chunky'].iloc[0]
+    if best_chunkyC < best_chunky:
+        best = best_chunkyC
+        alg = 'chunkyC'
+    else:
+        best = best_chunky
+        alg = 'chunky'
+
+    if best > best_norm:
+        best = best_norm
+        alg = 'norm'
+
+    # Draw Plot
+    plt.figure(figsize=(16,10), dpi= 80)
+    sns.kdeplot(df["Random"], shade=True, color="g", label="Random", alpha=.7)
+    sns.kdeplot(df["Greedy"], shade=True, color="deeppink", label="Greedy", alpha=.7)
+    sns.kdeplot(df["GreedyC"], shade=True, color="orange", label="Greedy, care=0.3", alpha=.7)
+    sns.kdeplot(df_chunky["Chunky"], shade=True, color="dodgerblue", label="Chunky", alpha=.7)
+    sns.kdeplot(df_chunky["ChunkyC"], shade=True, color="red", label="ChunkyC", alpha=.7)
+
+    # Decoration
+    plt.title(f'Density Plot of algorithms, {best} {alg}', fontsize=22)
+    plt.legend()
+    plt.show()
+
+    print(df)
 
 def speedtest(protein, strategy, minimum_stability, default = "y", iterations = 100, greed = 1, care = 0, chunk_size = 6, chunk_iterations = 100, step_strategy = "g"):
     '''
@@ -237,3 +303,5 @@ def csv_compiler(protein):
         writer.writeheader()
         for number, amino in enumerate(protein.sequence):
             writer.writerow({'amino': amino, 'direction': directions[number], 'coordinates': protein.path[number][1]})
+    
+    return protein
