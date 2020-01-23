@@ -5,6 +5,7 @@ obtain statistics to examine algorithm performance
 '''
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.lines import Line2D
 from code.algorithms.greedy_path import generate_greedy_path
 from code.algorithms.random_path import generate_random_path
 from code.algorithms.chunky_path import generate_chunky_path
@@ -103,12 +104,13 @@ def plot_path(protein):
         x_positions.append(x)
         y_positions.append(y)
 
+
         if protein.dim3:
             z = position[2]
             z_positions.append(z)
-            ax.scatter(x, y, z, s=140, marker='o', linewidths=1, color=amino_colors[amino])
+            ax.scatter(x, y, z, s=140, marker='o', linewidths=1, color=amino_colors[amino], )
         else:
-            plt.scatter(x, y, s=160, marker='o', linewidths=1, color=amino_colors[amino])
+            plt.scatter(x, y, s=160, marker='o', linewidths=1, color=amino_colors[amino], )
 
     if protein.dim3:
         ax.plot(x_positions, y_positions, z_positions, 'ko-', alpha=0.4, ms=1)
@@ -116,6 +118,13 @@ def plot_path(protein):
         plt.plot(x_positions, y_positions, 'ko-', alpha=0.4, ms=1)
 
     plt.title(f"stability: {protein.stability}")
+
+    custom_lines = [Line2D([0], [0], marker='o', markersize=10, color='blue', label='P', lw=0),
+                    Line2D([0], [0], marker='o', markersize=10, color='red', label='H', lw=0),
+                    Line2D([0], [0], marker='o', markersize=10, color='green', label='C', lw=0)]
+
+    plt.legend(handles = custom_lines)
+
     plt.axis('off')
     plt.show()
 
