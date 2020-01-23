@@ -2,8 +2,10 @@ import matplotlib.pyplot as plt
 from code.algorithms.greedy_path import generate_greedy_path
 from code.algorithms.random_path import generate_random_path
 from code.algorithms.chunky_path import generate_chunky_path
+from code.algorithms.forward_search import forward_search
 from code.helpers.navigator import *
 from code.analysis.stats import *
+from code.analysis.speedtest import speedtest
 from code.classes.protein import Protein
 
 print("Welcome to the User Interface!")
@@ -34,11 +36,11 @@ else:
     protein = Protein(protein_string)
 
 print("What algorithm do you want to perform on this protein?")
-print("Insert r for random, g for greedy and c for chunky path.")
+print("Insert r for random, g for greedy, c for chunky path and f for forward search.")
 
 while True:
     algorithm = input("")
-    if algorithm == "r" or algorithm == "g" or algorithm == "c":
+    if algorithm == "r" or algorithm == "g" or algorithm == "c" or algorithm == "f":
         print("You have chosen.")
         print()
         break
@@ -55,6 +57,8 @@ if default == "y":
         generate_greedy_path(protein)
     elif algorithm == "c":
         generate_chunky_path(protein)
+    elif algorithm == "f":
+        forward_search(protein)
 
     print(protein)
     print()
@@ -139,6 +143,14 @@ else:
         else:
             care = 0
 
+
+    if algorithm == "f":
+        print("What is the depth?")
+        while True:
+            depth = int(input(""))
+            if depth:
+                break
+
     # ask user what to do with the variables he has given
     while True:
         print()
@@ -159,10 +171,17 @@ else:
 
         if algorithm == "r":
             if action == "speedtest":
-                speedtest(protein, "r", minimum_stability, iterations=amount)
+                print("How many minutes do you want to run the algorithm? (formula uses: input * 60 seconds)")
+                while True:
+                    minutes = float(input(""))
+                    if minutes:
+                        break
+
+                speedtest(protein, "random", minutes=minutes)
+
             elif action == "best":
-                best = get_best_config(protein, "random", amount)
-                print(best)
+                get_best_config(protein, "random", amount)
+                print(protein)
                 print()
 
                 print("Type plot to plot this path, or type csv to save the results in a csv file called protein.csv, or anything else to continue with something else.")
@@ -170,18 +189,24 @@ else:
                     action_best = input("")
 
                     if action_best == "plot":
-                        plot_path(best)
+                        plot_path(protein)
                     elif action_best == "csv":
-                        csv_compiler(best)
+                        csv_compiler(protein)
                     else:
                         break
 
         elif algorithm == "g":
             if action == "speedtest":
-                speedtest(protein, "g", minimum_stability, iterations=amount, greed=greed, care=care)
+                print("How many minutes do you want to run the algorithm? (formula uses: input * 60 seconds)")
+                while True:
+                    minutes = float(input(""))
+                    if minutes:
+                        break
+                speedtest(protein, "greedy", minutes=minutes, greed=greed, care=care)
+
             elif action == "best":
-                best = get_best_config(protein, "greedy", amount, greed=greed, care=care)
-                print(best)
+                get_best_config(protein, "greedy", amount, greed=greed, care=care)
+                print(protein)
                 print()
 
                 print("Type plot to plot this path, or type csv to save the results in a csv file called protein.csv, or anything else to continue with something else.")
@@ -189,18 +214,25 @@ else:
                     action_best = input("")
 
                     if action_best == "plot":
-                        plot_path(best)
+                        plot_path(protein)
                     elif action_best == "csv":
-                        csv_compiler(best)
+                        csv_compiler(protein)
                     else:
                         break
 
         elif algorithm == "c":
             if action == "speedtest":
-                speedtest(protein, "c", minimum_stability, iterations=amount, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy="g")
+                print("How many minutes do you want to run the algorithm? (formula uses: input * 60 seconds)")
+                while True:
+                    minutes = float(input(""))
+                    if minutes:
+                        break
+
+                speedtest(protein, "chunky path", minutes=minutes, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy="g")
+
             elif action == "best":
-                best = get_best_config(protein, "chunky path", amount, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
-                print(best)
+                get_best_config(protein, "chunky path", amount, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
+                print(protein)
                 print()
 
                 print("Type plot to plot this path, or type csv to save the results in a csv file called protein.csv, or anything else to continue with something else.")
@@ -208,19 +240,45 @@ else:
                     action_best = input("")
 
                     if action_best == "plot":
-                        plot_path(best)
+                        plot_path(protein)
                     elif action_best == "csv":
-                        csv_compiler(best)
+                        csv_compiler(protein)
+                    else:
+                        break
+
+        elif algorithm == "f":
+            if action == "speedtest":
+                print("How many minutes do you want to run the algorithm? (formula uses: input * 60 seconds)")
+                while True:
+                    minutes = float(input(""))
+                    if minutes:
+                        break
+
+                speedtest(protein, "forward search", minutes=minutes, depth=depth)
+
+            elif action == "best":
+                get_best_config(protein, "forward search", amount, depth=depth)
+                print(protein)
+                print()
+
+                print("Type plot to plot this path, or type csv to save the results in a csv file called protein.csv, or anything else to continue with something else.")
+                while True:
+                    action_best = input("")
+
+                    if action_best == "plot":
+                        plot_path(protein)
+                    elif action_best == "csv":
+                        csv_compiler(protein)
                     else:
                         break
 
         if action == "change":
             print("What algorithm do you want to perform on this protein?")
-            print("Insert r for random, g for greedy and c for chunky path.")
+            print("Insert r for random, g for greedy, c for chunky path of f for forward search.")
 
             while True:
                 algorithm = input("")
-                if algorithm == "r" or algorithm == "g" or algorithm == "c":
+                if algorithm == "r" or algorithm == "g" or algorithm == "c" or algorithm == "f":
                     print("You have chosen.")
                     print()
                     break
@@ -230,13 +288,6 @@ else:
                 amount = int(input(""))
                 if amount > 0:
                     break
-
-            print("What is the minimum required stability to print to path? (integer, used for speedtest)")
-            if amount > 1:
-                while True:
-                    minimum_stability = int(input(""))
-                    if minimum_stability:
-                        break
 
             if algorithm == "g":
                 print("What is the greed factor? (float): ")
@@ -269,7 +320,7 @@ else:
                     if chunk_iterations > 0:
                         break
 
-                print("What step strategy? (r for random, g for greedy): ")
+                print("What single step strategy do you want to use? (r for random, g for greedy): ")
                 while True:
                     step_strategy = input("")
                     if step_strategy == "r" or step_strategy == "g":
@@ -289,5 +340,15 @@ else:
                 else:
                     care = 0
 
+            if algorithm == "f":
+                print("What is the depth?")
+                while True:
+                    depth = int(input(""))
+                    if depth:
+                        break
+
         if action == "quit":
+            print()
+            print("I'll be back.")
+            print()
             break
