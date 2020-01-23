@@ -7,7 +7,7 @@ from code.helpers.navigator import get_step_options
 from copy import deepcopy
 from random import choice
 
-def forward_search(protein, depth=5):
+def forward_search(protein, depth=5, retry=True):
     protein.initialize_path()
     while len(protein.path) < len(protein.sequence):
         paths = []
@@ -22,8 +22,11 @@ def forward_search(protein, depth=5):
             path_update = deepcopy(choice(quickest_best_paths))
             protein.__dict__ = path_update.__dict__.copy()
         except:
-            # try again if dead end is reached
-            forward_search(protein, depth)
+            # try again if dead end is reached, once with same depth, then one shallower
+            if not retry:
+                depth -= 1
+            return forward_search(protein, depth - 1)
+    return depth
 
 def look_ahead(protein, depth, paths):
     for option in get_step_options(protein):
