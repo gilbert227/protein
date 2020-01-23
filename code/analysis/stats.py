@@ -76,7 +76,6 @@ def get_best_config(protein, strategy, iterations, greed=1, care=0.2, chunk_size
 
     protein.__dict__ = best_config.__dict__.copy()
 
-
 def plot_path(protein):
     ''' visualisation of folded protein, depending on 3D '''
     x_positions = []
@@ -129,7 +128,7 @@ def care_histogram(protein, iterations, strategy, percentage, chunk_size = 6, ch
         df = df.assign(**dict_stability)
 
     df.drop(df.tail(int((iterations / 100) * (1-percentage))).index,inplace=True)
-    
+
     min = df.iloc[0].min()
     max = df.iloc[-1].max()
 
@@ -138,7 +137,7 @@ def care_histogram(protein, iterations, strategy, percentage, chunk_size = 6, ch
     fig, axes = plt.subplots(nrows=3, ncols=4)
     fig.subplots_adjust(hspace=0.5)
     fig.suptitle(f'Distribution of different care values, best for {best_care}')
-    
+
 
     for i, ax in zip(np.arange(0, 12, 1), axes.flatten()):
         care = i/10
@@ -284,7 +283,6 @@ def csv_compiler(protein):
         for number, amino in enumerate(protein.sequence):
             writer.writerow({'amino': amino, 'direction': directions[number], 'coordinates': protein.path[number][1]})
 
-    return protein
 
 def csv_reader():
     '''
@@ -315,3 +313,5 @@ def csv_reader():
     for amino in protein.sequence[2:]:
         protein.add_step(amino, coordinates[number])
         number += 1
+
+    return protein
