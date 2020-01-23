@@ -7,26 +7,28 @@ from code.helpers.navigator import get_step_options
 from copy import deepcopy
 from random import choice
 
-def forward_search(protein, depth=5, care=0):
+def forward_search(protein, depth=5):
     protein.initialize_path()
     while len(protein.path) < len(protein.sequence):
         paths = []
-        look_ahead(protein, depth, paths, care)
+        look_ahead(protein, depth, paths)
         try:
-            # catch exception if path remains empty after look_ahead
-            best_score = min([temp_protein.path_quality for temp_protein in paths])
-            quickest = min([len(temp_protein.path) for temp_protein in paths if temp_protein.path_quality == best_score])
-            protein = deepcopy(choice([temp_protein for temp_protein in paths if temp_protein.path_quality == best_score and len(temp_protein.path) == quickest]))
-        except:
-            # try again
-            return forward_search(protein, depth, care)
-    return protein
+            # catch exception if path remains empty after look_ahead (dead end)
 
-def look_ahead(protein, depth, paths, care):
+            # filter most stable paths
+            best_paths = [(length, protein) for stability, length, protein in paths if stability == min([stability for stability, length, protein in paths])]
+            # filter shortest paths to best stability
+            quickest_best_paths = [protein for length, protein in best_paths if length == min([length for length, protein in best_paths])]
+            path_update = deepcopy(choice(quickest_best_paths))
+            protein.__dict__ = path_update.__dict__.copy()
+        except:
+            # try again if dead end is reached
+            forward_search(protein, depth)
+
+def look_ahead(protein, depth, paths):
     for option in get_step_options(protein):
         temp_protein = deepcopy(protein)
-        temp_protein.add_step(temp_protein.sequence[len(temp_protein.path)], option, care)
-        paths.append(temp_protein)
+        temp_protein.add_step(temp_protein.sequence[len(temp_protein.path)], option)
+        paths.append((temp_protein.stability, len(temp_protein.path), temp_protein))
         if depth > 0 and len(temp_protein.path) < len(temp_protein.sequence):
-            look_ahead(temp_protein, depth - 1, paths, care)
-
+            look_ahead(temp_protein, depth - 1, paths)
