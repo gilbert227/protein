@@ -45,7 +45,7 @@ while True:
         print()
         break
 
-print("Do you want use default values and run a single time? (y for default)")
+print("Do you want use default values for input arguments and run a single time? (y for default)")
 default = input("")
 print()
 

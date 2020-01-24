@@ -1,11 +1,15 @@
+"""
+- dict maken voor hist van data
+
+"""
+
 from code.algorithms.greedy_path import generate_greedy_path
 from code.algorithms.random_path import generate_random_path
 from code.algorithms.chunky_path import generate_chunky_path
 from code.algorithms.forward_search import forward_search
-from code.analysis.stats import *
 import time
 
-def speedtest(protein, strategy, minutes = 1, greed = 1, care = 0, chunk_size = 6, chunk_iterations = 100, step_strategy = "g"):
+def speedtest(protein, strategy, minutes = 1, greed = 1, care = 0, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
     '''
     tests the speed of the different algorithms and stores the stabilities as results
     '''

@@ -10,9 +10,9 @@ class Protein:
         self.stability = 0
         self.path_quality = 0
 
-        # Symmetric keeps track of whether the full path is on the y-axis. If true, only
+        # symmetric keeps track of whether the full path is on the y-axis. If true, only
         # steps along the y-axis and in the positive x-direction will be considered.
-        # This excludes mirror images with respect to the y-axis.
+        # this excludes mirror images with respect to the y-axis.
         self.symmetric = True
 
         self.initialize_path()

@@ -10,14 +10,12 @@ from code.algorithms.greedy_path import generate_greedy_path
 from code.algorithms.random_path import generate_random_path
 from code.algorithms.chunky_path import generate_chunky_path
 from code.algorithms.forward_search import forward_search
-from code.classes.protein import Protein
 from code.helpers.navigator import *
-from mpl_toolkits.mplot3d import Axes3D
+from code.classes.protein import Protein
 import seaborn as sns
 from copy import deepcopy
 import numpy as np
 import pandas as pd
-import time
 import operator
 import csv
 import ast
@@ -28,7 +26,7 @@ amino_colors = {
     'C': 'green'
 }
 
-def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random", depth = 3):
+def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy", depth = 3):
     if strategy == "random":
         generate_random_path(protein)
     elif strategy == "greedy":
@@ -38,7 +36,7 @@ def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iter
     elif strategy == "forward search":
         forward_search(protein, depth)
 
-def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, greed=1, care=0, chunk_size = 6, chunk_iterations = 500, step_strategy = "random"):
+def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
     ''' returns first configuration not in configs '''
     for i in range(max_iterations):
         generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy)
@@ -47,7 +45,7 @@ def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, 
             return (i, config, True)
     return (None, None, False)
 
-def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1, care=0, chunk_size=6, chunk_iterations=500, step_strategy="random", depth=3):
+def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3):
     ''' get number of duplicates generated between found unique states '''
     configs = []
     separating_duplicates = []
@@ -65,7 +63,7 @@ def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1,
 
     return separating_duplicates, len(separating_duplicates)
 
-def get_best_config(protein, strategy, iterations, greed=1, care=0.2, chunk_size=6, chunk_iterations=500, step_strategy="greedy", depth=3):
+def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3):
     best_stability = 0
     best_config = None
 
@@ -154,7 +152,6 @@ def care_histogram(protein, iterations, strategy, percentage, chunk_size = 6, ch
         sns.distplot(df[f'care={care}'], ax=ax, bins=len(set(df[f'care={care}'])), color='green')
         ax.set(title=f'care = {care}')
         ax.set_xlim([min, max])
-        # plt.ylim(ymin=0, ymax=150)
 
     plt.show()
 
@@ -313,38 +310,6 @@ def depth_forward_test(protein, iterations, max_depth=5, care=0):
     plt.title(f'Density Plot of different depths of Forward Search algorithm, best value={best_value} for depth={best_algorithm}', fontsize=22)
     plt.legend()
     plt.show()
-
-
-
-def speedtest(protein, strategy, minimum_stability, default = "y", iterations = 100, greed = 1, care = 0, chunk_size = 6, chunk_iterations = 100, step_strategy = "g"):
-    '''
-
-    '''
-
-    start = time.time()
-    counter = 0
-    for i in range(iterations):
-        if strategy == "g":
-            generate_greedy_path(protein)
-        elif strategy == "c":
-            if default == "y":
-                generate_chunky_path(protein)
-            else:
-                generate_chunky_path(protein, chunk_size, chunk_iterations, step_strategy, care)
-        else:
-            generate_random_path(protein)
-
-        if protein.stability < minimum_stability:
-            print("protein: ")
-            print(protein)
-            print()
-
-            counter += 1
-
-    end = time.time()
-    print(f"Amount of results: {counter}")
-    print(f"Time passed: {end - start}")
-    print()
 
 def csv_compiler(protein):
     '''

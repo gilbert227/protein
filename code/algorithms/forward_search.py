@@ -2,13 +2,18 @@
 forward_search.py
 
 search of stable configuration of protein by looking ahead
+
+- care
 '''
 from code.helpers.navigator import get_step_options
 from copy import deepcopy
 from random import choice
 
 def forward_search(protein, depth=5, retry=True):
+
     protein.initialize_path()
+
+    # check if path is fully generated
     while len(protein.path) < len(protein.sequence):
         paths = []
         look_ahead(protein, depth, paths)
@@ -17,6 +22,7 @@ def forward_search(protein, depth=5, retry=True):
 
             # filter most stable paths
             best_paths = [(length, protein) for stability, length, protein in paths if stability == min([stability for stability, length, protein in paths])]
+
             # filter shortest paths to best stability
             quickest_best_paths = [protein for length, protein in best_paths if length == min([length for length, protein in best_paths])]
             path_update = deepcopy(choice(quickest_best_paths))

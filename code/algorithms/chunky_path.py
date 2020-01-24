@@ -1,22 +1,24 @@
+"""
+- greed function
+- 
+""" 
+
 from code.helpers.navigator import get_step_options, get_added_stability
-from code.classes.protein import Protein
 from random import choice
 import copy
 import math
 
-
-def generate_chunky_path(protein, chunk_size = 6, iterations = 500, step_strategy = "greedy", care = 0):
+def generate_chunky_path(protein, chunk_size = 6, iterations = 50, step_strategy = "greedy", care = 0):
 
     # this is the starting amino letter in the sequence, as the first two are already set, we start with index 2
     start = 2
-
     protein.initialize_path()
 
     # determine if the whole path can be made in chunks
     chunks = math.floor((len(protein.sequence) - start)/chunk_size)
     chars_left = len(protein.sequence) - start - (chunk_size * chunks)
 
-    crash = 0
+    crash = False
 
     for chunk in range(chunks):
         best_stability = 100
@@ -27,7 +29,7 @@ def generate_chunky_path(protein, chunk_size = 6, iterations = 500, step_strateg
 
             # used to check if the first letter in a chunk has a coordinate to go to
             counter = 0
-            first_letter_stuck = 0
+            first_letter_stuck = False
 
             # create the paths, choose between using a random step or a greedy step in method
             for amino in simulation.sequence[start:start + chunk_size]:
@@ -40,7 +42,7 @@ def generate_chunky_path(protein, chunk_size = 6, iterations = 500, step_strateg
                         counter += 1
                     else:
                         if counter == 0:
-                            first_letter_stuck = 1
+                            first_letter_stuck = True
                         # the chunk could not be finished, add a 100 stability points so it will not be chosen as best chunk
                         simulation.stability += 100
                         break
@@ -57,13 +59,13 @@ def generate_chunky_path(protein, chunk_size = 6, iterations = 500, step_strateg
                         counter += 1
                     else:
                         if counter == 0:
-                            first_letter_stuck = 1
+                            first_letter_stuck = True
                         # the chunk could not be finished, add a 100 stability points so it will not be chosen as best chunk
                         simulation.stability += 100
                         break
 
             # stop iterating over chunks if the first letter has no where to go
-            if first_letter_stuck == 1:
+            if first_letter_stuck:
                 break
 
             # determine the chunk with the best stability
@@ -75,7 +77,7 @@ def generate_chunky_path(protein, chunk_size = 6, iterations = 500, step_strateg
 
         if best_stability > 0:
             # the sequence crashed and has no options left, so stop iterating over chunks
-            crash = 1
+            crash = True
             break
         else:
             # add the best path to the protein object
@@ -84,7 +86,7 @@ def generate_chunky_path(protein, chunk_size = 6, iterations = 500, step_strateg
             start += chunk_size
 
     # if there are remaining letters, add them by using a random or greedy method
-    if crash == 0 and chars_left > 0:
+    if not crash and chars_left > 0:
         for amino in protein.sequence[start:len(protein.sequence)]:
             if step_strategy == "random":
                 # perform random step algorithm
@@ -93,7 +95,7 @@ def generate_chunky_path(protein, chunk_size = 6, iterations = 500, step_strateg
                     step = choice(options)
                     protein.add_step(amino, step)
                 else:
-                    crash = 1
+                    crash = True
                     break
             else:
                 # perform greedy step algorithm
@@ -107,5 +109,5 @@ def generate_chunky_path(protein, chunk_size = 6, iterations = 500, step_strateg
                     protein.add_step(amino, step)
 
     # the sequence crashed somewhere, so start a new path
-    if crash == 1:
+    if crash:
         generate_chunky_path(protein)
