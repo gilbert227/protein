@@ -1,4 +1,6 @@
 """
+chunky_path.py
+
 Divides a sequence in chunks where the size of each chunk is given as input argument. Then it runs the first chunk a certain number of times to decide which version
 has the best stability. In the chunks, steps are made one by one, using the random or greedy algorithm. When the best chunk is chosen, the algorithm continues with the next chunk.
 """

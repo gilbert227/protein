@@ -1,3 +1,9 @@
+'''
+main.py
+
+The User Interface for the project
+'''
+
 import matplotlib.pyplot as plt
 from code.algorithms.greedy_path import generate_greedy_path
 from code.algorithms.random_path import generate_random_path

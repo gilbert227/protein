@@ -1,7 +1,7 @@
 '''
 stats.py
 
-obtain statistics to examine algorithm performance
+obtain statistics to examine algorithm performances
 '''
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -19,12 +19,6 @@ import pandas as pd
 import operator
 import csv
 import ast
-
-amino_colors = {
-    'P': 'blue',
-    'H': 'red',
-    'C': 'green'
-}
 
 def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy", depth = 3):
     if strategy == "random":
@@ -75,4 +69,3 @@ def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size=6
             best_config = deepcopy(protein)
 
     protein.__dict__ = best_config.__dict__.copy()
-
