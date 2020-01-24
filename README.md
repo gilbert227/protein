@@ -22,18 +22,18 @@ python main.py
 ```
 This is the custom made User Interface of the project, the user can easily submit the input arguments he/she wants to use to perform the provided algorithms.
 
-The second way is to use the Python Console. As most code in the project is designed to be used as a package, one must import these functions. For simplicity, import_packages.py imports all these immediately, do make sure to stay in this directory. Run:
+The second way is to use the Python Console. As most code in the project is designed to be used as a package, one must import the code first. For simplicity, import_packages.py imports all these immediately for the user. Run:
 
 ```
 Python
 
-from import_packages import *
+>> from import_packages import *
 ```
 
 You are now in the Python Console and have access to all methods in the code. To get started, create a protein object:
 
 ```
-protein = Protein("your_protein_string", dim3=True)
+>> protein = Protein("your_protein_string", dim3=True)
 ```
 
 where your_protein_string is the protein which you want to fold and
