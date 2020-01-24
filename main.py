@@ -7,6 +7,8 @@ from code.helpers.navigator import *
 from code.analysis.stats import *
 from code.analysis.speedtest import speedtest
 from code.classes.protein import Protein
+from code.analysis.visuals import *
+from code.analysis.cvs import *
 
 print("Welcome to the User Interface!")
 print()
