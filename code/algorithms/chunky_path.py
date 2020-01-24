@@ -1,7 +1,7 @@
 """
-- greed function
-- 
-""" 
+Divides a sequence in chunks where the size of each chunk is given as input argument. Then it runs the first chunk a certain number of times to decide which version
+has the best stability. In the chunks, steps are made one by one, using the random or greedy algorithm. When the best chunk is chosen, the algorithm continues with the next chunk.
+"""
 
 from code.helpers.navigator import get_step_options, get_added_stability
 from random import choice
@@ -9,7 +9,10 @@ import copy
 import math
 
 def generate_chunky_path(protein, chunk_size = 6, iterations = 50, step_strategy = "greedy", care = 0):
-
+    """
+    generates the chunky path algorithm, iterations is the number of times a chunk will iterate itself to determine the best path, step strategy is how a single step will
+    run in the chunk
+    """
     # this is the starting amino letter in the sequence, as the first two are already set, we start with index 2
     start = 2
     protein.initialize_path()

@@ -1,26 +1,25 @@
 """
-- dict maken voor hist van data
-
+Contains the speedtest method
 """
 
-from code.algorithms.greedy_path import generate_greedy_path
-from code.algorithms.random_path import generate_random_path
-from code.algorithms.chunky_path import generate_chunky_path
-from code.algorithms.forward_search import forward_search
+from code.analysis.stats import *
+from code.classes.protein import *
 import time
 
 def speedtest(protein, strategy, minutes = 1, greed = 1, care = 0, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
     '''
-    tests the speed of the different algorithms and stores the stabilities as results
+    returns a dictionary of the results where the key is the stability and the values the number of times this stability is found by the algorithm,
+    within the specified time called minutes
     '''
 
-    results = []
-    counter = 0
+    results = {}
 
     t_end = time.time() + 60 * minutes
     while time.time() < t_end:
         generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy)
-        results.append(protein.stability)
-        counter += 1
+        if protein.stability in results:
+            results[protein.stability] += 1
+        else:
+            results[protein.stability] = 1
 
-    return results, counter
+    return results
