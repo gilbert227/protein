@@ -39,7 +39,7 @@ You are now in the Python Console and have access to all methods in the code. To
 where your_protein_string is the protein which you want to fold and
 dim3 is for the use of the third dimension. True means 3D, False means 2D. Now that you have created your protein object, you can start generating paths.
 
-More information about the methods the user can use is provided in code/README.md.
+More information about the methods the user can use is provided in code/README.md (analysis section to be more precise).
 
 ### Authors
 * Gilbert ter Beek
