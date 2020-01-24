@@ -67,15 +67,12 @@ def get_added_stability(protein, amino, step, care=0):
                 added_stability += binding_score
                 weight += (1 - care) * binding_score + care * (blocking_penalty ** care)
     return added_stability, weight
-<<<<<<< HEAD
-=======
-
 
 def make_up_your_mind(protein, amino, greed, care):
     ''' choose next step for protein using the greed function '''
 
     options = get_step_options(protein)
-    
+
     # check for dead ends
     if options == []:
         return None
@@ -106,35 +103,3 @@ def make_up_your_mind(protein, amino, greed, care):
     # choose number representing the index for chosen option
     i = choice([i for i in range(len(options))], 1, p=weights)[0]
     return options[i], added_stabilities[i], weights[i]
-
-def get_path_directions(protein):
-    '''
-    converts path into format as specified by case assignment
-    directions between subsequent aminoacids are signified by numbers, where:
-       -1, 1 represent unit steps along the x-axis
-       -2, 2 represent unit steps along the y-axis
-       -3, 3 represent unit steps along the z-axis if protein in 3D
-       0 terminates the sequence
-    '''
-    
-    # obtain positions from path
-    positions = [point[1] for point in protein.path]
-
-    directions = []
-    for i in range(len(positions)-1):
-        # append appropriate number for each step's direction
-        if not protein.dim3:
-            directions.append(
-                1 * (positions[i + 1][0] - positions[i][0]) +
-                2 * (positions[i + 1][1] - positions[i][1])
-            )
-        else:
-            directions.append(
-                1 * (positions[i + 1][0] - positions[i][0]) +
-                2 * (positions[i + 1][1] - positions[i][1]) +
-                3 * (positions[i + 1][2] - positions[i][2])
-            )
-    # append 0 to terminate the sequence
-    directions.append(0)
-    return directions
->>>>>>> c0c963a127932d065d4a6fca7c099e672e0ef9a5
