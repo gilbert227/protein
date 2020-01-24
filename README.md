@@ -22,7 +22,7 @@ python main.py
 ```
 This is the custom made User Interface of the project, the user can easily submit the input arguments he/she wants to use to perform the provided algorithms.
 
-The second way is to use the Python Console. As most code in the project is designed to be used as a package, one must import these functions. For simplicity, import_packages.py imports all these immediately. So run:
+The second way is to use the Python Console. As most code in the project is designed to be used as a package, one must import these functions. For simplicity, import_packages.py imports all these immediately, do make sure to stay in this directory. Run:
 
 ```
 Python
@@ -30,6 +30,16 @@ Python
 from import_packages import *
 ```
 
+You are now in the Python Console and have access to all methods in the code. To get started, create a protein object:
+
+```
+protein = Protein("your_protein_string", dim3=True)
+```
+
+where your_protein_string is the protein which you want to fold and
+dim3 is for the use of the third dimension. True means 3D, False means 2D. Now that you have created your protein object, you can start generating paths.
+
+More information about the methods the user can use is provided in code/README.md.
 
 ### Authors
 * Gilbert ter Beek
