@@ -3,7 +3,7 @@
 
     supporting functions for navigating proteins and surroundings
 '''
-
+from numpy.random import choice
 
 def get_surrounding_coordinates(protein, coordinate):
     ''' returns positions surrounding inserted coordinate depending on the third dimension'''
@@ -65,5 +65,76 @@ def get_added_stability(protein, amino, step, care=0):
             if position in amino_positions:
                 binding_score, blocking_penalty = protein.bond_stabilities[amino][amino_neighbor]
                 added_stability += binding_score
-                weight += binding_score + blocking_penalty**(care)
+                weight += (1 - care) * binding_score + care * (blocking_penalty ** care)
     return added_stability, weight
+<<<<<<< HEAD
+=======
+
+
+def make_up_your_mind(protein, amino, greed, care):
+    ''' choose next step for protein using the greed function '''
+
+    options = get_step_options(protein)
+    
+    # check for dead ends
+    if options == []:
+        return None
+
+    added_stabilities = []
+    weights = []
+    for option in options:
+        added_stability, weight = get_added_stability(protein, amino, option, care)
+        added_stabilities.append(added_stability)
+        weights.append(weight)
+
+    # generate probability distribution based on the greed-function
+    # bias is used to shift weights to generate meaningful probability distribution
+    bias = 1
+
+    # invert and shift values to non-negative numbers
+    max_weight = max(weights)
+    weights = [abs(weight - max_weight) for weight in weights]
+    best_score = max(weights)
+
+    # apply greed function
+    weights = [greed * (weight == best_score) * (weight + bias) + (1 - greed) * (weight + ((1 - greed) * bias)) for weight in weights]
+
+    # normalize weights
+    sum_weights = sum(weights)
+    weights = [weight / sum_weights for weight in weights]
+
+    # choose number representing the index for chosen option
+    i = choice([i for i in range(len(options))], 1, p=weights)[0]
+    return options[i], added_stabilities[i], weights[i]
+
+def get_path_directions(protein):
+    '''
+    converts path into format as specified by case assignment
+    directions between subsequent aminoacids are signified by numbers, where:
+       -1, 1 represent unit steps along the x-axis
+       -2, 2 represent unit steps along the y-axis
+       -3, 3 represent unit steps along the z-axis if protein in 3D
+       0 terminates the sequence
+    '''
+    
+    # obtain positions from path
+    positions = [point[1] for point in protein.path]
+
+    directions = []
+    for i in range(len(positions)-1):
+        # append appropriate number for each step's direction
+        if not protein.dim3:
+            directions.append(
+                1 * (positions[i + 1][0] - positions[i][0]) +
+                2 * (positions[i + 1][1] - positions[i][1])
+            )
+        else:
+            directions.append(
+                1 * (positions[i + 1][0] - positions[i][0]) +
+                2 * (positions[i + 1][1] - positions[i][1]) +
+                3 * (positions[i + 1][2] - positions[i][2])
+            )
+    # append 0 to terminate the sequence
+    directions.append(0)
+    return directions
+>>>>>>> c0c963a127932d065d4a6fca7c099e672e0ef9a5
