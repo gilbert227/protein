@@ -65,7 +65,7 @@ def get_added_stability(protein, amino, step, care=0):
             if position in amino_positions:
                 binding_score, blocking_penalty = protein.bond_stabilities[amino][amino_neighbor]
                 added_stability += binding_score
-                weight += (binding_score + blocking_penalty**(care))
+                weight += binding_score + blocking_penalty**(care)
     return added_stability, weight
 
 
