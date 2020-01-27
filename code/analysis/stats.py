@@ -3,22 +3,20 @@ stats.py
 
 obtain statistics to examine algorithm performances
 '''
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.lines import Line2D
 from code.algorithms.greedy_path import generate_greedy_path
 from code.algorithms.random_path import generate_random_path
 from code.algorithms.chunky_path import generate_chunky_path
 from code.algorithms.forward_search import forward_search
-from code.helpers.navigator import *
-from code.classes.protein import Protein
+
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.lines import Line2D
 import seaborn as sns
 from copy import deepcopy
 import numpy as np
 import pandas as pd
 import operator
-import csv
-import ast
+import time
 
 def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy", depth = 3):
     if strategy == "random":
@@ -69,3 +67,21 @@ def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size=6
             best_config = deepcopy(protein)
 
     protein.__dict__ = best_config.__dict__.copy()
+
+def speedtest(protein, strategy, minutes = 1, greed = 1, care = 0, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
+    '''
+    returns a dictionary of the results where the key is the stability and the values the number of times this stability is found by the algorithm,
+    within the specified time called minutes
+    '''
+
+    results = {}
+
+    t_end = time.time() + 60 * minutes
+    while time.time() < t_end:
+        generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy)
+        if protein.stability in results:
+            results[protein.stability] += 1
+        else:
+            results[protein.stability] = 1
+
+    return results

@@ -1,4 +1,4 @@
-''' 
+'''
 forward_search.py
 
 search of stable configuration of protein by looking ahead
@@ -32,6 +32,7 @@ def forward_search(protein, depth=5, retry=True):
             if not retry:
                 depth -= 1
             return forward_search(protein, depth - 1)
+
     return depth
 
 def look_ahead(protein, depth, paths):

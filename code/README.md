@@ -79,14 +79,21 @@ This method is used to have a single method that can run all algorithms. This me
 ```
 This method is used to return a best configuration within the given number of iterations. The method uses the same input as generate_path(), but has an extra argument called iterations. This is the number of times the user wants to generate a single path.
 
+```
+>> speedtest
+```
+
 ### csv.py
 This file contains methods to save the amino acids, directions and coordinates of a generated protein into a csv file. As well as a method to read this csv file again and generate the protein as saved by the csv file.
 To save a generated protein, use:
 ```
->> csv_compiler(protein)
+>> csv_compiler(protein, csv_name="protein")
 ```
-This saves the protein into a file named protein.csv in the current directory the user is in. To read a csv file use:
+By default, this saves the protein into a file named protein.csv in the current directory the user is in. If the user wants to use another name, the input should be like "a_name". To read a csv file use:
 ```
->> csv_reader(csv_file)
+>> protein = csv_reader("csv_file")
 ```
-Where csv_file is the name of the csv file in which the protein is saved. This method immediately creates a new protein object and generates the path by looking at the coordinates the protein takes.
+Where csv_file is the name of the csv file in which the protein is saved, it is read as a string. This method immediately creates a new protein object and generates the path by looking at the coordinates the protein takes. This object needs to be assigned to a name.
+
+### visuals.py
+#WACHTEN TOT SAMER AF HEEFT
