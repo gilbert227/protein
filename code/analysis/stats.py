@@ -18,7 +18,7 @@ import pandas as pd
 import operator
 import time
 
-def generate_path(protein, strategy, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3):
+def generate_path(protein, strategy, greed=1, care=0, chunk_size=6, chunk_iterations=50, step_strategy="greedy", depth=3):
     '''
     generates a path according to the chosen strategy
     '''
