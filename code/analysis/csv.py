@@ -2,14 +2,14 @@ import csv
 import ast
 from code.classes.protein import Protein
 
-def csv_compiler(protein):
+def csv_compiler(protein, csv_name="protein"):
     '''
     makes an csv file with protein stats
     '''
 
     directions = get_path_directions(protein)
-    
-    with open('protein.csv', 'w') as csvfile:
+
+    with open(csv_name +'.csv', 'w') as csvfile:
         fieldnames = ['amino', 'direction', 'coordinates']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 

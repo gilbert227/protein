@@ -1,4 +1,4 @@
-''' 
+'''
 forward_search.py
 
 search of stable configuration of protein by looking ahead. Chooses the best stability
@@ -10,15 +10,15 @@ from copy import deepcopy
 from random import choice
 
 def forward_search(protein, depth=5, retry=True):
-    ''' 
+    '''
     looks for the best score with the least steps within the user-defined depth
-    
+
     if dead-ends are generated repeatedly, calls itself with lowered depth and retry set to False
-    
+
     manipulates path attribute of given Protein object and returns the effective depth in case this
     differs from the user-defined depth (for checking purposes)
     '''
-    
+
     protein.initialize_path()
 
     # check if path is fully generated
@@ -43,9 +43,9 @@ def forward_search(protein, depth=5, retry=True):
     return depth
 
 def look_ahead(protein, depth, paths):
-    ''' 
+    '''
     recursive function generating all paths (daughters) to the input Protein object (parent)
-    
+
     stores all the resulting Protein objects in a list that is passed down through the recursive process
     '''
     for option in get_step_options(protein):
@@ -55,10 +55,10 @@ def look_ahead(protein, depth, paths):
 
         # add option to the temporary copy
         temp_protein.add_step(temp_protein.sequence[len(temp_protein.path)], option)
-        
+
         # add temporary copy to the paths list
         paths.append((temp_protein.stability, len(temp_protein.path), temp_protein))
-        
+
         # function is called recursively with reduced depth until search depth is reached (depth == 0)
         if depth > 0 and len(temp_protein.path) < len(temp_protein.sequence):
             # generate all daughters of temporary protein until the required depth
