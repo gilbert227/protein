@@ -4,17 +4,14 @@ main.py
 The User Interface for the project
 '''
 
-import matplotlib.pyplot as plt
 from code.algorithms.greedy_path import generate_greedy_path
 from code.algorithms.random_path import generate_random_path
 from code.algorithms.chunky_path import generate_chunky_path
 from code.algorithms.forward_search import forward_search
-from code.helpers.navigator import *
-from code.analysis.stats import *
-from code.analysis.speedtest import speedtest
+from code.analysis.stats import generate_path, get_best_config, speedtest
 from code.classes.protein import Protein
-from code.analysis.visuals import *
-from code.analysis.cvs import *
+from code.analysis.visuals import plot_path
+from code.analysis.csv import csv_compiler
 
 print("Welcome to the User Interface!")
 print()
@@ -156,7 +153,7 @@ else:
     while True:
         print()
         print("What would you like to do?")
-        print("Type speedtest to do a speedtest with your input, it will print proteins with values less than the minimum stability you have given.")
+        print("Type speedtest to do a speedtest with your input, it will generate results within the given time.")
         print("Type best to find the best generated path with the input you have provided.")
         print("Type change to alter your variables. Note that this implies that you have to change everything up to the algorithm")
         print("Type quit to quit the program.")

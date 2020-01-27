@@ -39,15 +39,15 @@ Usage:
 Where chunk_size is the size of the chunks, iterations is the number of times a chunk is made and step_strategy is the strategy for which the chunks will generate its individual steps. This argument should be either "greedy" or "random". If the step_strategy is greedy, the care factor will also play a role. This method is not compatible with the greed variable.
 
 ### Forward Search
-Forward search is a constructive algorithm which generates all paths resulting from all posible decisions up to a certain depth (user defined). From these paths, it takes the paths that result in the highest stability in the fewest number of steps, and stores it. It then repeats this process untill a complete path is generated.
+Forward search is a constructive algorithm which generates all paths resulting from all possible decisions up to a certain depth (user defined). From these paths, it takes the paths that result in the highest stability in the fewest number of steps, and stores it. It then repeats this process until a complete path is generated.
 Usage:
 ```
 >> forward_search(protein, depth=5, retry=True)
 ```
-Depth should be an integer number not exceeding the length of the protein. In practice, it is probably best to keep the depth below 6, depending on the user's hardware and patience. The retry argument is used to lower the depth of the search if dead ends are generated repeatedly. It should be kept as is but the function sets it to false when it calls itself after the second attempt. After completion, the protein is updated to represent the final path and the effective depth is returned (as it is not necessarilly the user-defined depth).
+Depth should be an integer number not exceeding the length of the protein. In practice, it is probably best to keep the depth below 6, depending on the user's hardware and patience. The retry argument is used to lower the depth of the search if dead ends are generated repeatedly. It should be kept as is but the function sets it to false when it calls itself after the second attempt. After completion, the protein is updated to represent the final path and the effective depth is returned (as it is not necessarily the user-defined depth).
 
 ## Helpers
-In helpers/navigator.py one can find methods that are used to help determine the next coordinate in the path. Most of them are used for all algorithms. The function get_surrounding_coordinates takes a protein object and a coordinate as input and returns the positions surrounding the coordinate. Depending on the given protein's 'dim3' (boolean) attribute, either a 2D or 3D set of coordinates is returned. From a set of surrounding coordinates, get_step_options removes those already occupied by the protein, checks for symmetry with respect to the vertical axis, and returns the options available for the next aminoacid. For a given option, get_added_stability returns the added stability associated with the new step, as well as a weight which depends on the added stability and blocking penalty. make_up_your_mind is currently only used by the greedy algorithm, and generalizes the decision making process for variable greed.
+In helpers/navigator.py one can find methods that are used to help determine the next coordinate in the path. Most of them are used for all algorithms. The function get_surrounding_coordinates takes a protein object and a coordinate as input and returns the positions surrounding the coordinate. Depending on the given protein's 'dim3' (Boolean) attribute, either a 2D or 3D set of coordinates is returned. From a set of surrounding coordinates, get_step_options removes those already occupied by the protein, checks for symmetry with respect to the vertical axis, and returns the options available for the next amino acid. For a given option, get_added_stability returns the added stability associated with the new step, as well as a weight which depends on the added stability and blocking penalty. make_up_your_mind is currently only used by the greedy algorithm, and generalizes the decision making process for variable greed.
 
 ## Analysis
 This folder holds all functions to generate results and analyze the case. There are separate files for generating data (stats.py) and analyzing/visualizing (visuals.py).
@@ -63,12 +63,12 @@ This function is used to have a single method that can run all algorithms. This 
 ```
 >> get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy")
 ```
-Takes a protein, strategy (type string, name of the algorithm), and a list of configurations as input. It generates paths until one is found that is not in the list of configurations, i.e. a new unique path. It returns the number of iterations before the new configuration was found, the configuration itself, and a boolean signifying whether a new configuration was found before the maximum number of iterations was reached (i, config, found).
+Takes a protein, strategy (type string, name of the algorithm), and a list of configurations as input. It generates paths until one is found that is not in the list of configurations, i.e. a new unique path. It returns the number of iterations before the new configuration was found, the configuration itself, and a Boolean signifying whether a new configuration was found before the maximum number of iterations was reached (i, config, found).
 
 ```
 >> get_separating_duplicates(protein, strategy, duplication_threshold, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3)
 ```
-Calls get_next_unique_config, at first with an empty list. Takes the config that is returned, adds it to the configs list, stores the number of iterations and while 'found' is returned as True, reruns the previous function. As the list of configs grows, it will take more and more iterations to produce new configurations (hence 'separating duplicates'). The number of separating duplicates is a measure of the occupation of the state space, and if an asymptote can be observed before the number of iterations is exceeded, it must be located at the size of the state space (i.e. the set of all valid paths). In practice, this can only be done for short proteins (length below 10), and serves to illustrate the enourmous difference between the theoretical upper bound and the practical size of the state-space.
+Calls get_next_unique_config, at first with an empty list. Takes the config that is returned, adds it to the configs list, stores the number of iterations and while 'found' is returned as True, reruns the previous function. As the list of configs grows, it will take more and more iterations to produce new configurations (hence 'separating duplicates'). The number of separating duplicates is a measure of the occupation of the state space, and if an asymptote can be observed before the number of iterations is exceeded, it must be located at the size of the state space (i.e. the set of all valid paths). In practice, this can only be done for short proteins (length below 10), and serves to illustrate the enormous difference between the theoretical upper bound and the practical size of the state-space.
 
 ```
 >> get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3)
@@ -76,8 +76,9 @@ Calls get_next_unique_config, at first with an empty list. Takes the config that
 This method is used to return a best configuration within the given number of iterations. The method uses the same input as generate_path(), but has an extra argument called iterations. This is the number of times the user wants to generate a single path.
 
 ```
->> speedtest
+>> speedtest(protein, strategy, minutes=1, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3)
 ```
+This method generates paths within the given amount of time in minutes. It returns a dictionary with stabilities as keys and the number of times the stability is found as the value. All input arguments except for minutes are used a mentioned before.
 
 ### csv.py
 This file contains methods to save the amino acids, directions and coordinates of a generated protein into a csv file. As well as a method to read this csv file again and generate the protein as saved by the csv file.
@@ -92,4 +93,16 @@ By default, this saves the protein into a file named protein.csv in the current 
 Where csv_file is the name of the csv file in which the protein is saved, it is read as a string. This method immediately creates a new protein object and generates the path by looking at the coordinates the protein takes. This object needs to be assigned to a name.
 
 ### visuals.py
-#WACHTEN TOT SAMER AF HEEFT
+This file contains methods that create histograms or plots to easily check results.
+
+```
+>> plot_path(protein)
+```
+This method plots a path of the folded protein, depending on the protein dimensions, the plot will be in 2D or 3D.
+
+```
+>> care_histogram(protein, iterations, strategy, percentage, chunk_size=6, chunk_iterations=100, step_strategy="greedy")
+```
+#VERDERWACHTEN TOT SAMER AF HEEFT
+#SAMER JIJ HEBT DE MEESTE GEMAAKT DUS MISSCHIEN HANDIG ALS JIJ ZE KORT UITLEGT
+#IN DE CODE MOETEN DEFAULT INPUTS ZONDER SPATIES, KUN JIJ DAT ALVAST AANPASSEN?

@@ -1,7 +1,7 @@
 '''
 stats.py
 
-obtain statistics to examine algorithm performances
+includes methods to obtain statistics to examine algorithm performances
 '''
 from code.algorithms.greedy_path import generate_greedy_path
 from code.algorithms.random_path import generate_random_path
@@ -18,7 +18,10 @@ import pandas as pd
 import operator
 import time
 
-def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy", depth = 3):
+def generate_path(protein, strategy, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3):
+    '''
+    generates a path according to the chosen strategy
+    '''
     if strategy == "random":
         generate_random_path(protein)
     elif strategy == "greedy":
@@ -28,8 +31,10 @@ def generate_path(protein, strategy, greed=1, care=0, chunk_size = 6, chunk_iter
     elif strategy == "forward search":
         forward_search(protein, depth)
 
-def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, greed=1, care=0, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
-    ''' returns first configuration not in configs '''
+def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy"):
+    '''
+    returns first configuration not in configs
+    '''
     for i in range(max_iterations):
         generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy)
         config = protein.path
@@ -38,7 +43,9 @@ def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, 
     return (None, None, False)
 
 def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3):
-    ''' get number of duplicates generated between found unique states '''
+    '''
+    gets number of duplicates generated between found unique states
+    '''
     configs = []
     separating_duplicates = []
     found = True
@@ -56,11 +63,15 @@ def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1,
     return separating_duplicates, len(separating_duplicates)
 
 def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3):
+    '''
+    generates a number of paths, defined by iterations and sets the best value as the protein object
+    '''
     best_stability = 0
     best_config = None
 
     for i in range(iterations):
         generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy, depth)
+
         stability = protein.stability
         if stability < best_stability:
             best_stability = stability
@@ -68,9 +79,9 @@ def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size=6
 
     protein.__dict__ = best_config.__dict__.copy()
 
-def speedtest(protein, strategy, minutes = 1, greed = 1, care = 0, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
+def speedtest(protein, strategy, minutes=1, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3):
     '''
-    returns a dictionary of the results where the key is the stability and the values the number of times this stability is found by the algorithm,
+    returns a dictionary of the results where the key is the stability of the protein and the value the number of times this stability is found by the algorithm,
     within the specified time called minutes
     '''
 
@@ -78,7 +89,7 @@ def speedtest(protein, strategy, minutes = 1, greed = 1, care = 0, chunk_size = 
 
     t_end = time.time() + 60 * minutes
     while time.time() < t_end:
-        generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy)
+        generate_path(protein, strategy, greed, care, chunk_size, chunk_iterations, step_strategy, depth)
         if protein.stability in results:
             results[protein.stability] += 1
         else:
