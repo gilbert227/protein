@@ -20,9 +20,9 @@ There are two ways to run the code in this project. The first way is to simply r
 ```
 python main.py
 ```
-This is the custom made User Interface of the project, the user can easily submit the input arguments he/she wants to use to perform the provided algorithms.
+This is the custom made User Interface of the project, the user can easily submit the input arguments he/she wants to use to perform the provided algorithms. Note that this UI only provides the user with methods to run the algorithms, plot the best of all iterations and save this best result as csv file.
 
-The second way is to use the Python Console. As most code in the project is designed to be used as a package, one must import the code first. For simplicity, import_packages.py imports all these immediately for the user. Run:
+The second way is to use the Python Interpreter. As most code in the project is designed to be used as a package, one must import the code first. For simplicity, import_packages.py imports all these immediately for the user. Run:
 
 ```
 Python
@@ -30,7 +30,7 @@ Python
 >> from import_packages import *
 ```
 
-You are now in the Python Console and have access to all methods in the code. To get started, create a protein object:
+You are now in the Python Interpreter and have access to all methods in the code. To get started, create a protein object:
 
 ```
 >> protein = Protein("your_protein_string", dim3=True)
@@ -39,7 +39,7 @@ You are now in the Python Console and have access to all methods in the code. To
 where your_protein_string is the protein which you want to fold and
 dim3 is for the use of the third dimension. True means 3D, False means 2D. Now that you have created your protein object, you can start generating paths.
 
-More information about the methods the user can use is provided in code/README.md (analysis section to be more precise).
+More information about the methods the user can use is provided in code/README.md.
 
 ### Authors
 * Gilbert ter Beek

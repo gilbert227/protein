@@ -1,10 +1,14 @@
+import csv
+import ast
+from code.classes.protein import Protein
+
 def csv_compiler(protein):
     '''
     makes an csv file with protein stats
     '''
 
     directions = get_path_directions(protein)
-
+    
     with open('protein.csv', 'w') as csvfile:
         fieldnames = ['amino', 'direction', 'coordinates']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -13,14 +17,14 @@ def csv_compiler(protein):
         for number, amino in enumerate(protein.sequence):
             writer.writerow({'amino': amino, 'direction': directions[number], 'coordinates': protein.path[number][1]})
 
-def csv_reader():
+def csv_reader(csv_file):
     '''
     creates a protein object where the path is defined in the csv file as made by csv_compiler where the filename is protein.csv and information is given as:
     amino, direction, coordinate
     '''
     sequence = ""
     coordinates = []
-    with open('protein.csv') as csvfile:
+    with open(csv_file) as csvfile:
         csv_reader = csv.reader(csvfile, delimiter=',')
         line_count = 0
         for row in csv_reader:
