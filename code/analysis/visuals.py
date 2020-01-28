@@ -6,6 +6,7 @@ from matplotlib.lines import Line2D
 import seaborn as sns
 from copy import deepcopy
 import numpy as np
+import time
 import pandas as pd
 import operator
 import ast
@@ -63,7 +64,7 @@ def care_histogram(protein, iterations, strategy, percentage, max_care, chunk_si
     The input argument 'percentage' is used to filter the amount shown in the plot. 
     Care is tested for 0.0 until 'max_care'. 
     '''
-    
+
     df = pd.DataFrame()
 
     # use care from 0.0 to max_care
