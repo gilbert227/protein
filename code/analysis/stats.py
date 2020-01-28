@@ -96,7 +96,8 @@ def speedtest(protein, strategy, minutes=1, greed=1, care=0, chunk_size=8,
     '''
     returns a dictionary of the results where the key is the stability of the
     protein and the value the number of times this stability is found by the
-    algorithm, within the specified time called minutes
+    algorithm, within the specified time called minutes, this can be used to
+    inquire some insights in the speed and quality of the algorithm
     '''
 
     results = {}
