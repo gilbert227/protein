@@ -112,7 +112,7 @@ def care_histogram(protein, iterations, strategy, percentage, max_care,
     sns.set()
     fig, axes = plt.subplots(nrows=nrows, ncols=ncols)
     fig.subplots_adjust(hspace=0.5)
-    fig.suptitle(f'Distribution of different care values, best for \\
+    fig.suptitle(f'Distribution of different care values, best for \
                 {best_care} with the {strategy} algorithm')
 
     sns.set_palette('pastel')
@@ -188,16 +188,22 @@ def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0,
     else:
         best_forward = 0
 
-    if best_random > best_greedy and best_random > best_chunky
-            and best_random > best_forward:
+    if (
+            best_random > best_greedy and best_random > best_chunky
+            and best_random > best_forward
+        ):
         best_solution = best_random
         algorithm = 'Random'
-    elif best_greedy > best_random and best_greedy > best_chunky
-            and best_greedy > best_forward:
+    elif (
+            best_greedy > best_random and best_greedy > best_chunky
+            and best_greedy > best_forward
+        ):
         best_solution = best_greedy
         algorithm = 'Greedy'
-    elif best_forward > best_random and best_forward > best_greedy
-            and best_forward > best_chunky:
+    elif (
+            best_forward > best_random and best_forward > best_greedy \
+            and best_forward > best_chunky
+        ):
         best_solution = best_forward
         algorithm = 'Forward Search'
     else:
@@ -215,10 +221,10 @@ def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0,
         bins = range(best_solution),label=f'Chunky Path, care={care_chunky}',
         kde=False, norm_hist=True)
     sns.distplot(df_forward["forward"], color="deeppink",
-        bins = range(best_solution),label=f'Forward Search, \\
+        bins = range(best_solution),label=f'Forward Search, \
         care={care_forward}', kde=False, norm_hist=True)
 
-    plt.title(f'Density Plot of algorithms, best solution={best_solution} \\
+    plt.title(f'Density Plot of algorithms, best solution={best_solution} \
         from {algorithm}', fontsize=22)
     plt.xlabel('Absolute Value of Stability')
     plt.ylabel('Density')
@@ -262,7 +268,7 @@ def forward_depth_test(protein, minutes, depth_range):
             label=f'depth={depth}', kde=False, norm_hist=True)
         count += 1
 
-    plt.title(f'Density Plot of Forward Search depths | best: \\
+    plt.title(f'Density Plot of Forward Search depths | best: \
         depth={best_depth}, value={best_stability}', fontsize=22)
     plt.xlabel('Absolute Value of Stability')
     plt.ylabel('Density')
@@ -303,7 +309,7 @@ def chunk_size_test(protein, minutes, chunk_range, care=0):
             label=f'chunk size={size}', kde=False, norm_hist=True)
         count += 1
 
-    plt.title(f'Density Plot of different chunk sizes | best: \\
+    plt.title(f'Density Plot of different chunk sizes | best: \
         size={best_size}, value={best_stability}', fontsize=22)
     plt.xlabel('Absolute Value of Stability')
     plt.ylabel('Density')
