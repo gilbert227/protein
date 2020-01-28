@@ -57,39 +57,44 @@ def plot_path(protein):
     plt.axis('off')
     plt.show()
 
-def care_histogram(protein, iterations, strategy, percentage, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
+def care_histogram(protein, iterations, strategy, percentage, max_care, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
     """
+    Plots the given strategies for different values for care in one figure with multiple histograms.
+    The input argument 'percentage' is used to filter the amount shown in the plot. 
+    Care is tested for 0.0 until 'max_care'. 
     """
     df = pd.DataFrame()
 
-    # use care from 0.0 to 1.1
-    for i in np.arange(0, 12, 1):
+    # use care from 0.0 to max_care
+    for i in np.arange(0, max_care * 10 + 1, 1):
         care = i/10
         stabilities = []
 
         for ii in range(iterations):
             generate_path(protein, strategy, greed=1, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
-            stabilities.append(protein.stability)
+            stabilities.append(abs(protein.stability))
 
         stabilities.sort()
         dict_stability = {f'care={care}': stabilities}
 
         df = df.assign(**dict_stability)
 
-    df.drop(df.tail(int((iterations / 100) * (1-percentage))).index,inplace=True)
+    # get the desired percentage data to plot
+    df.drop(df.head(int((iterations / 100) * (1 - percentage))).index,inplace=True)
 
+    # used for range of x-axis for plot
     min = df.iloc[0].min()
     max = df.iloc[-1].max()
 
-    best_care = df.iloc[0].idxmin()
-
+    best_care = df.iloc[-1].idxmax()
+    
     sns.set()
     fig, axes = plt.subplots(nrows=3, ncols=4)
     fig.subplots_adjust(hspace=0.5)
-    fig.suptitle(f'Distribution of different care values, best for {best_care} with algorithm {strategy}')
+    fig.suptitle(f'Distribution of different care values, best for {best_care} with the {strategy} algorithm')
 
     sns.set_palette('pastel')
-    for i, ax in zip(np.arange(0, 12, 1), axes.flatten()):
+    for i, ax in zip(np.arange(0, max_care * 10 + 1, 1), axes.flatten()):
         care = i/10
         sns.distplot(df[f'care={care}'], ax=ax, bins=len(set(df[f'care={care}'])), color="green", kde=False)
         ax.set(title=f'care = {care}', xlabel='stability', ylabel='frequency')
@@ -98,51 +103,44 @@ def care_histogram(protein, iterations, strategy, percentage, chunk_size = 6, ch
     plt.show()
 
 def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0, it_chunky=0, care_chunky=0, it_forward=0, care_forward=0):
-
-    # random
+    """ Compares the different algorithms in a density histogram."""
+    
+    # the random algorithm
     df_random = pd.DataFrame()
     stabilities = []
     for i in range(it_random):
         generate_path(protein, 'random')
         stabilities.append(abs(protein.stability))
-
     stabilities.sort()
     dict_stability = {'random': stabilities}
-
     df_random = df_random.assign(**dict_stability)
 
-
-    # greedy
+    # the greedy algorithm
     df_greedy = pd.DataFrame()
     stabilities = []
     for i in range(it_greedy):
         generate_path(protein, 'greedy', care=care_greedy)
         stabilities.append(abs(protein.stability))
-
     stabilities.sort()
     dict_stability = {'greedy': stabilities}
-
     df_greedy = df_greedy.assign(**dict_stability)
 
-
-    # chunky path
+    # the chunky path algorithm 
     df_chunky = pd.DataFrame()
     stabilities = []
     for i in range(it_chunky):
         generate_path(protein, 'chunky path', care=care_chunky)
         stabilities.append(abs(protein.stability))
-
     stabilities.sort()
     dict_stability = {'chunky': stabilities}
     df_chunky = df_chunky.assign(**dict_stability)
 
-    # foward search
+    # the foward search algorithm 
     df_forward = pd.DataFrame()
     stabilities = []
     for i in range(it_forward):
         generate_path(protein, 'forward search', care=care_forward)
         stabilities.append(abs(protein.stability))
-
     stabilities.sort()
     dict_stability = {'forward': stabilities}
     df_forward = df_forward.assign(**dict_stability)
@@ -178,7 +176,6 @@ def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0, it_chunky=0
         best_solution = best_chunky
         algorithm = 'Chunky Path'
 
-    # Draw Plot
     sns.set()
     plt.figure(figsize=(16,10), dpi= 80)
     sns.distplot(df_random["random"], color="orange", bins = range(best_solution), label=f'Random', kde=False, norm_hist=True)
@@ -186,7 +183,6 @@ def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0, it_chunky=0
     sns.distplot(df_chunky["chunky"], color="green", bins = range(best_solution),label=f'Chunky Path, care={care_chunky}', kde=False, norm_hist=True)
     sns.distplot(df_forward["forward"], color="deeppink", bins = range(best_solution),label=f'Forward Search, care={care_forward}', kde=False, norm_hist=True)
 
-    # decoration
     plt.title(f'Density Plot of algorithms, best solution={best_solution} from {algorithm}', fontsize=22)
     plt.xlabel('Absolute Value of Stability')
     plt.ylabel('Density')
@@ -194,27 +190,14 @@ def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0, it_chunky=0
     plt.show()
 
 
-def speed_test_plot(protein, time):
-
-    results = speedtest(protein, 'random', minutes=time)
-    df = pd.DataFrame.from_dict(results, orient='index')
-    df = df.sort_index()
-    df = df.reindex(list(range(df.index.min(),df.index.max()+1)),fill_value=0)
-    print(df)
-
-    sns.set()
-    plt.figure(figsize=(16,10), dpi= 80)
-    plt.hist(df[0], bins=df.index[-1], color="orange")
-
-    plt.legend()
-    plt.show()
-
 def forward_depth_test(protein, minutes, depth_range):
+    """ Plots a density plot with different depths of the forward search algorithm. """
 
-    # generate data
+    # generate data   
     stability_lists = []
     for depth in depth_range:
         stabilities = []
+        # do the test for a specific period per depth
         t_end = time.time() + int(60 * minutes)
         while time.time() < t_end:
             generate_path(protein, 'forward search', depth=depth)
@@ -223,15 +206,16 @@ def forward_depth_test(protein, minutes, depth_range):
         stabilities.sort()
         stability_lists.append(stabilities)
 
+        # used to see how much data is generated per time session
         print(len(stabilities))
 
-    # draw plot
     sns.set()
     sns.set_palette('bright')
     plt.figure(figsize=(18,10), dpi= 80)
     best_stability = 0
     count = 0
     for depth in depth_range:
+        # plot all data in the stability lists
         data = stability_lists[count]
         if best_stability <= data[-1]:
             best_stability = data[-1]
@@ -246,65 +230,41 @@ def forward_depth_test(protein, minutes, depth_range):
     plt.show()
 
 
-def chunky_path_care(protein, iterations, max_care, max_chunk_size):
+def chunk_size_test(protein, minutes, chunk_range):
+    """ Test the different kind of depth from Chunky Path algorithm. """
 
-    # get dataframe for different cares
-    column_names = ['stability', 'care', 'size']
-    df = pd.DataFrame(columns = column_names)
-
-    for chunk_size in range(max_chunk_size + 1):
-        stabilities_care = []
-        for i in range(int(max_care * 10 + 1)):
-            stabilities = []
-            care = i / 10
-            for i in range(iterations):
-                generate_path(protein, 'chunky path', care=care)
-                dic = {'stability': [protein.stability], 'care': [care], 'size': [chunk_size]}
-                df_temp = pd.DataFrame(data=dic)
-                df = pd.concat([df, df_temp])
-
-
-
-    # fig = plt.figure()
-    # ax = fig.add_subplot(111, projection='3d')
-
-    # ax.scatter(list(df['size']), list(df['care']), list(df['stability']), c='r', marker='o')
-
-    # ax.set_xlabel('Size')
-    # ax.set_ylabel('Care')
-    # ax.set_zlabel('Stability')
-
-    # plt.show()
-
-    with sns.axes_style('white'):
-        sns.jointplot(df['size'], df['care'], df['stability'], kind='hex')
-
-
-def depth_forward_test(protein, iterations, max_depth=5, care=0):
-
-    # foward search
-    df_forward = pd.DataFrame()
-
-    for depth in range(max_depth):
+    stability_lists = []
+    for size in chunk_range:
         stabilities = []
-        for i in range(iterations):
-            generate_path(protein, 'forward search', care=care, depth=depth)
-            stabilities.append(protein.stability)
+        # do the test for a specific period per chunk size
+        t_end = time.time() + int(60 * minutes)
+        while time.time() < t_end:
+            generate_path(protein, 'chunky path', chunk_size=size)
+            stabilities.append(abs(protein.stability))
 
         stabilities.sort()
-        dict_stability = {f'{depth}': stabilities}
-        df_forward = df_forward.assign(**dict_stability)
+        stability_lists.append(stabilities)
 
-    # best path
-    best_value = int(df_forward.iloc[0].min())
-    best_algorithm = int(df_forward.iloc[0].idxmin())
+        # used to see how much data is generated per time session
+        print(len(stabilities))
 
-    # plot
-    plt.figure(figsize=(16,10), dpi= 80)
-    for depth in range(max_depth):
-        sns.distplot(df_forward[f'{depth}'], label=f'Depth={depth}', kde=False, rug=True)
+    sns.set()
+    sns.set_palette('bright')
+    plt.figure(figsize=(18,10), dpi= 80)
+    best_stability = 0
+    count = 0
+    for size in chunk_range:
+        # plot all data in the stability lists
+        data = stability_lists[count]
+        if best_stability <= data[-1]:
+            best_stability = data[-1]
+            best_size = chunk_range[count]
+        sns.distplot(data, bins = range(best_stability + 1), label=f'chunk size={size}', kde=False, norm_hist=True)
+        count += 1
 
-    # Decoration
-    plt.title(f'Density Plot of different depths of Forward Search algorithm, best value={best_value} for depth={best_algorithm}', fontsize=22)
+    plt.title(f'Density Plot of different chunk sizes | best: size={best_size}, value={best_stability}', fontsize=22)
+    plt.xlabel('Absolute Value of Stability')
+    plt.ylabel('Density')
     plt.legend()
     plt.show()
+
