@@ -210,18 +210,27 @@ def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0,
         best_solution = best_chunky
         algorithm = 'Chunky Path'
 
+    print(df_chunky)
+    print(df_greedy)
+    print(df_forward)
+    print(df_random)
+
     sns.set()
     plt.figure(figsize=(16,10), dpi= 80)
     sns.distplot(df_random["random"], color="orange",
-        bins = range(best_solution), label=f'Random', kde=False, norm_hist=True)
+        bins = range(best_solution + 1), label=f'Random', kde=False, norm_hist=True)
     sns.distplot(df_greedy["greedy"], color="red",
-        bins = range(best_solution), label=f'Greedy, care={care_greedy}',
+        bins = range(best_solution + 1), label=f'Greedy, care={care_greedy}',
         kde=False, norm_hist=True)
     sns.distplot(df_chunky["chunky"], color="green",
-        bins = range(best_solution),label=f'Chunky Path, care={care_chunky}',
+        bins = range(best_solution + 1),label=f'Chunky Path, care={care_chunky}',
         kde=False, norm_hist=True)
     sns.distplot(df_forward["forward"], color="deeppink",
+<<<<<<< HEAD
+        bins = range(best_solution + 1),
+=======
         bins = range(best_solution),
+>>>>>>> 42fbe78a94cb3b376b3ce12d19d867e9f4c7adc3
         label=f'Forward Search, care={care_forward}', kde=False, norm_hist=True)
 
     plt.title(f'Density Plot of algorithms, best solution={best_solution} \
