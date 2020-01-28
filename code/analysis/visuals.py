@@ -58,11 +58,12 @@ def plot_path(protein):
     plt.show()
 
 def care_histogram(protein, iterations, strategy, percentage, max_care, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
-    """
+    '''
     Plots the given strategies for different values for care in one figure with multiple histograms.
     The input argument 'percentage' is used to filter the amount shown in the plot. 
     Care is tested for 0.0 until 'max_care'. 
-    """
+    '''
+    
     df = pd.DataFrame()
 
     # use care from 0.0 to max_care
@@ -103,7 +104,7 @@ def care_histogram(protein, iterations, strategy, percentage, max_care, chunk_si
     plt.show()
 
 def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0, it_chunky=0, care_chunky=0, it_forward=0, care_forward=0):
-    """ Compares the different algorithms in a density histogram."""
+    ''' Compares the different algorithms in a density histogram. '''
     
     # the random algorithm
     df_random = pd.DataFrame()
@@ -191,7 +192,7 @@ def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0, it_chunky=0
 
 
 def forward_depth_test(protein, minutes, depth_range):
-    """ Plots a density plot with different depths of the forward search algorithm. """
+    ''' Plots a density plot with different depths of the forward search algorithm. '''
 
     # generate data   
     stability_lists = []
