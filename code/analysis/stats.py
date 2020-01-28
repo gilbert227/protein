@@ -18,7 +18,7 @@ import pandas as pd
 import operator
 import time
 
-def generate_path(protein, strategy, greed=1, care=0, chunk_size=6, chunk_iterations=50, step_strategy="greedy", depth=3):
+def generate_path(protein, strategy, greed=1, care=0, chunk_size=8, chunk_iterations=50, step_strategy="greedy", depth=3):
     '''
     generates a path according to the chosen strategy
     '''
@@ -31,7 +31,7 @@ def generate_path(protein, strategy, greed=1, care=0, chunk_size=6, chunk_iterat
     elif strategy == "forward search":
         forward_search(protein, depth)
 
-def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy"):
+def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, greed=1, care=0, chunk_size=8, chunk_iterations=50, step_strategy="greedy"):
     '''
     returns first configuration not in configs
     '''
@@ -42,7 +42,7 @@ def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000, 
             return (i, config, True)
     return (None, None, False)
 
-def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3):
+def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1, care=0, chunk_size=8, chunk_iterations=50, step_strategy="greedy", depth=3):
     '''
     gets number of duplicates generated between found unique states
     '''
@@ -62,7 +62,7 @@ def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1,
 
     return separating_duplicates, len(separating_duplicates)
 
-def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3):
+def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size=8, chunk_iterations=50, step_strategy="greedy", depth=3):
     '''
     generates a number of paths, defined by iterations and sets the best value as the protein object
     '''
@@ -79,7 +79,7 @@ def get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size=6
 
     protein.__dict__ = best_config.__dict__.copy()
 
-def speedtest(protein, strategy, minutes=1, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3):
+def speedtest(protein, strategy, minutes=1, greed=1, care=0, chunk_size=8, chunk_iterations=50, step_strategy="greedy", depth=3):
     '''
     returns a dictionary of the results where the key is the stability of the protein and the value the number of times this stability is found by the algorithm,
     within the specified time called minutes
@@ -94,5 +94,5 @@ def speedtest(protein, strategy, minutes=1, greed=1, care=0, chunk_size=6, chunk
             results[protein.stability] += 1
         else:
             results[protein.stability] = 1
-    
+
     return results

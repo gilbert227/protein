@@ -10,7 +10,7 @@ from random import choice
 import copy
 import math
 
-def generate_chunky_path(protein, chunk_size = 6, iterations = 50, step_strategy = "greedy", care = 0):
+def generate_chunky_path(protein, chunk_size=8, iterations=50, step_strategy="greedy", care=0):
     """
     generates the chunky path algorithm, iterations is the number of times a chunk will iterate itself to determine the best path, step strategy is how a single step will
     run in the chunk
