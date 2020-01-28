@@ -10,7 +10,7 @@ string4 = HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH
 ### General
 In each folder are results that belong to the specified protein string. One can find folders belonging to the algorithms and some files that include results of all algorithms. In these folders are specific results generated for specific algorithms. There are folders for greedy, chunky path and forward search. All these algorithm files contain a csv and png of the best found path. The specifics can be found in the file names.
 
-In all string folders is a comparing algorithm png. This histogram puts all algorithms in the same graph so the user can easily compare the algorithms.
+In all string folders is a comparing algorithm png. This histogram puts all algorithms in the same graph so the user can easily compare the algorithms. The numbers at the end are the number of generated paths for each algorithm. In the order: random, greedy, chunky path, forward search.
 
 ### Greedy
 In all greedy folders, one can find histograms that compare the care factors, depending on the dimensions used. This can be found in a file named care_hist_2D_10000it_00-05.png (or 3D). This means that 10000 paths are made for every specified care factor. The last part specifies the range of the care factor.
