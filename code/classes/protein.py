@@ -10,14 +10,16 @@ class Protein:
         self.stability = 0
         self.path_quality = 0
 
-        # symmetric keeps track of whether the full path is on the y-axis. If true, only
-        # steps along the y-axis and in the positive x-direction will be considered.
-        # this excludes mirror images with respect to the y-axis.
+        # symmetric keeps track of whether the full path is on the y-axis.
+        # If true, only steps along the y-axis and in the positive x-direction
+        # will be considered. This excludes mirror images with respect to the
+        # y-axis.
         self.symmetric = True
 
         self.initialize_path()
 
-        # the first number in the tuple provides the stability points, the second number is the penalty used by the care-factor
+        # the first number in the tuple provides the stability points,
+        # the second number is the penalty used by the care-factor
         self.bond_stabilities = {
             "P": {"P": (0, 0), "H": (0, 2), "C": (0, 3)},
             "H": {"P": (0, 2), "H": (-1, 0), "C": (-1, 1)},
@@ -48,11 +50,14 @@ class Protein:
 
     def add_step(self, amino, step, care=0):
         ''' adds step to path and updates relevant attributes '''
-        if self.symmetric and ((not self.dim3 and step[0] != 0) or (self.dim3 and (step[0] !=0 or step[1] != 0))):
-            # path no longer coincides with vertical-axis, symmetric is now false
+        if self.symmetric and ((not self.dim3 and step[0] != 0) or
+            (self.dim3 and (step[0] !=0 or step[1] != 0))):
+            # path no longer coincides with vertical-axis, symmetric is now
+            # false
             self.symmetric = False
 
-        added_stability, added_quality = get_added_stability(self, amino, step, care)
+        added_stability, added_quality = get_added_stability(self, amino,
+                                                             step, care)
         self.stability += added_stability
         self.path_quality += added_quality
 

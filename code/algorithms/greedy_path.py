@@ -9,7 +9,8 @@ from numpy.random import choice
 
 def generate_greedy_path(protein, greed=1, care=0):
     '''
-    generates path by choosing among the available options based on the step's score
+    generates path by choosing among the available options based on the
+    step's score
 
     the value of greed (between 0 and 1) determines the likelhood of choosing
     highest-scoring options over others.

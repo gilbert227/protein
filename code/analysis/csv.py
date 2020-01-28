@@ -1,3 +1,8 @@
+'''
+csv.py
+
+includes functions to save and read the protein object into/from a csv file
+'''
 import csv
 import ast
 from code.classes.protein import Protein
@@ -15,11 +20,14 @@ def csv_compiler(protein, csv_name="protein"):
 
         writer.writeheader()
         for number, amino in enumerate(protein.sequence):
-            writer.writerow({'amino': amino, 'direction': directions[number], 'coordinates': protein.path[number][1]})
+            writer.writerow({'amino': amino, 'direction': directions[number],
+                             'coordinates': protein.path[number][1]})
 
 def csv_reader(csv_file):
     '''
-    creates a protein object where the path is defined in the csv file as made by csv_compiler where the filename is protein.csv and information is given as:
+    creates a protein object where the path is defined in the csv file as made
+    by csv_compiler where the filename is protein.csv and information is given
+    as:
     amino, direction, coordinate
     '''
     sequence = ""

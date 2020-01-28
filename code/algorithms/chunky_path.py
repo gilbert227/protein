@@ -1,21 +1,27 @@
-"""
+'''
 chunky_path.py
 
-Divides a sequence in chunks where the size of each chunk is given as input argument. Then it runs the first chunk a certain number of times to decide which version
-has the best stability. In the chunks, steps are made one by one, using the random or greedy algorithm. When the best chunk is chosen, the algorithm continues with the next chunk.
-"""
+Divides a sequence in chunks where the size of each chunk is given as input
+argument. Then it runs the first chunk a certain number of times to decide
+which version has the best stability. In the chunks, steps are made one by one,
+using the random or greedy algorithm. When the best chunk is chosen,
+the algorithm continues with the next chunk.
+'''
 
 from code.helpers.navigator import get_step_options, get_added_stability
 from random import choice
 import copy
 import math
 
-def generate_chunky_path(protein, chunk_size=8, iterations=50, step_strategy="greedy", care=0):
-    """
-    generates the chunky path algorithm, iterations is the number of times a chunk will iterate itself to determine the best path, step strategy is how a single step will
-    run in the chunk
-    """
-    # this is the starting amino letter in the sequence, as the first two are already set, we start with index 2
+def generate_chunky_path(protein, chunk_size=8, iterations=50,
+                        step_strategy="greedy", care=0):
+    '''
+    generates the chunky path algorithm, iterations is the number of times a
+    chunk will iterate itself to determine the best path, step strategy is how
+    a single step will run in the chunk
+    '''
+    # this is the starting amino letter in the sequence,
+    # as the first two are already set, we start with index 2
     start = 2
     protein.initialize_path()
 
@@ -32,11 +38,11 @@ def generate_chunky_path(protein, chunk_size=8, iterations=50, step_strategy="gr
         for i in range(iterations):
             simulation = copy.deepcopy(protein)
 
-            # used to check if the first letter in a chunk has a coordinate to go to
             counter = 0
             first_letter_stuck = False
 
-            # create the paths, choose between using a random step or a greedy step in method
+            # create the paths, choose between using a random step or a
+            # greedy step in method
             for amino in simulation.sequence[start:start + chunk_size]:
                 if step_strategy == "random":
                     # perform random step algorithm
@@ -48,7 +54,8 @@ def generate_chunky_path(protein, chunk_size=8, iterations=50, step_strategy="gr
                     else:
                         if counter == 0:
                             first_letter_stuck = True
-                        # the chunk could not be finished, add a 100 stability points so it will not be chosen as best chunk
+                        # the chunk could not be finished, add a 100 stability
+                        # points so it will not be chosen as best chunk
                         simulation.stability += 100
                         break
                 else:
@@ -57,15 +64,20 @@ def generate_chunky_path(protein, chunk_size=8, iterations=50, step_strategy="gr
                     if options != []:
                         weighted_options = []
                         for option in options:
-                            weighted_options.append((option, get_added_stability(simulation, amino, option, care)[1]))
-                        best_score = min([weight for option, weight in weighted_options])
-                        step = choice([option for option, weight in weighted_options if weight == best_score])
+                            weighted_options.append((option,
+                                get_added_stability(simulation, amino, option,
+                                care)[1]))
+                        best_score = min([weight for option,
+                            weight in weighted_options])
+                        step = choice([option for option, weight in
+                            weighted_options if weight == best_score])
                         simulation.add_step(amino, step)
                         counter += 1
                     else:
                         if counter == 0:
                             first_letter_stuck = True
-                        # the chunk could not be finished, add a 100 stability points so it will not be chosen as best chunk
+                        # the chunk could not be finished, add a 100 stability
+                        # points so it will not be chosen as best chunk
                         simulation.stability += 100
                         break
 
@@ -81,7 +93,8 @@ def generate_chunky_path(protein, chunk_size=8, iterations=50, step_strategy="gr
 
 
         if best_stability > 0:
-            # the sequence crashed and has no options left, so stop iterating over chunks
+            # the sequence crashed and has no options left, so stop
+            # iterating over chunks
             crash = True
             break
         else:
@@ -90,7 +103,8 @@ def generate_chunky_path(protein, chunk_size=8, iterations=50, step_strategy="gr
                 protein.add_step(amino, step)
             start += chunk_size
 
-    # if there are remaining letters, add them by using a random or greedy method
+    # if there are remaining letters, add them by using a random or greedy
+    # method
     if not crash and chars_left > 0:
         for amino in protein.sequence[start:len(protein.sequence)]:
             if step_strategy == "random":
@@ -108,9 +122,13 @@ def generate_chunky_path(protein, chunk_size=8, iterations=50, step_strategy="gr
                 if options != []:
                     weighted_options = []
                     for option in options:
-                        weighted_options.append((option, get_added_stability(protein, amino, option, care)[1]))
-                    best_score = min([weight for option, weight in weighted_options])
-                    step = choice([option for option, weight in weighted_options if weight == best_score])
+                        weighted_options.append((option,
+                            get_added_stability(protein,
+                            amino, option, care)[1]))
+                    best_score = min([weight for option,
+                        weight in weighted_options])
+                    step = choice([option for option, weight in
+                        weighted_options if weight == best_score])
                     protein.add_step(amino, step)
 
     # the sequence crashed somewhere, so start a new path

@@ -1,8 +1,13 @@
+'''
+random_path.py
+
+implementation of random path-generating algorithm.
+'''
 from code.helpers.navigator import get_step_options
 from random import choice
 
 def generate_random_path(protein):
-    ''' generates random path '''
+    ''' generates random path, choosing the coordinates randomly '''
     # reinitialize protein path
     protein.initialize_path()
 
