@@ -103,6 +103,20 @@ This method plots a path of the folded protein, depending on the protein dimensi
 ```
 >> care_histogram(protein, iterations, strategy, percentage, chunk_size=6, chunk_iterations=100, step_strategy="greedy")
 ```
-#VERDERWACHTEN TOT SAMER AF HEEFT
-#SAMER JIJ HEBT DE MEESTE GEMAAKT DUS MISSCHIEN HANDIG ALS JIJ ZE KORT UITLEGT
-#IN DE CODE MOETEN DEFAULT INPUTS ZONDER SPATIES, KUN JIJ DAT ALVAST AANPASSEN?
+This function plots multiple plots in one figure. 'nrows' is the amount of plots vertically. 'ncols' is the amount of plots horizontally. Thus, nrows=3 and ncols=4 means 12 plots. Care is plotted for a range of 0.0 until 'max_care'. In the plot, only 'percentage' is shown, that is, if 90 is given 90% of the data is shown. 
+
+```
+>> comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0, it_chunky=0, care_chunky=0, it_forward=0, care_forward=0)
+```
+This function plots all the different algorithms against eachother. It plots it in a density plot, thus all the data is normalized. One can choose which algorithm is included, by setting the amount of iterations to 0 or non-zero. Care_forward is currently unused, but usefull for further studies. This function is build for a large range of applications, therefore DataFrames are used and the best solution is calculated manually.
+
+```
+>> forward_depth_test(protein, minutes, depth_range)
+```
+This function plots different depth sizes for the Forward Search algorithm on top of eachother. It uses a time range, with the same amount of time for all depth sizes. This is done because sometimes the time explodes and no results are found. 'depth_range' needs a tuple with all the depth sizes desired to test. 
+
+```
+>> chunk_size_test(protein, minutes, chunk_range)
+```
+This function plots different chunk sizes for the Chunky Path algorithm against eachother. It uses a time range, with the same amount of time for all depth sizes. This is done because sometimes the time explodes and no results are found. 'chunk_range' needs a tuple with all the chunk sizes desired to test. 
+
