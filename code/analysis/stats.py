@@ -35,13 +35,13 @@ def generate_path(protein, strategy, greed=1, care=0, chunk_size=8,
 
 def get_next_unique_config(protein, strategy, configs=[], max_iterations=10000,
         greed=1, care=0, chunk_size=8, chunk_iterations=50,
-        step_strategy="greedy"):
+        step_strategy="greedy", depth=3):
     '''
-    returns first configuration not in configs
+    returns first configuration not already in configs
     '''
     for i in range(max_iterations):
         generate_path(protein, strategy, greed, care, chunk_size,
-                    chunk_iterations, step_strategy)
+                    chunk_iterations, step_strategy, depth)
         config = protein.path
         if config not in configs:
             return (i, config, True)
@@ -58,13 +58,21 @@ def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1,
     found = True
 
     while found:
-        separation, config, found = get_next_unique_config(protein, strategy,
-                                        configs, duplication_threshold,
-                                        greed, care)
+        separation, config, found = get_next_unique_config(
+                                        protein, strategy, configs, 
+                                        duplication_threshold, greed=greed,
+                                        care=care, chunk_size=chunk_size,
+                                        chunk_iterations=chunk_iterations,
+                                        step_strategy=step_strategy,
+                                        depth=depth
+                                        )
+        print(separation
         separating_duplicates.append(separation)
         configs.append(config)
+
     # remove last element from configs, contains (None, None, False)
     separating_duplicates.pop()
+
     # plot for testing purposes, should be separate function
     plt.plot(separating_duplicates)
     plt.show()
