@@ -58,7 +58,7 @@ def plot_path(protein):
     plt.axis('off')
     plt.show()
 
-def care_histogram(protein, iterations, strategy, percentage, max_care, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
+def care_histogram(protein, iterations, strategy, percentage, max_care, nrows=2, ncols=2, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
     '''
     Plots the given strategies for different values for care in one figure with multiple histograms.
     The input argument 'percentage' is used to filter the amount shown in the plot. 
@@ -91,7 +91,7 @@ def care_histogram(protein, iterations, strategy, percentage, max_care, chunk_si
     best_care = df.iloc[-1].idxmax()
     
     sns.set()
-    fig, axes = plt.subplots(nrows=3, ncols=4)
+    fig, axes = plt.subplots(nrows=nrows, ncols=ncols)
     fig.subplots_adjust(hspace=0.5)
     fig.suptitle(f'Distribution of different care values, best for {best_care} with the {strategy} algorithm')
 
