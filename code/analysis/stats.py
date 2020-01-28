@@ -94,5 +94,5 @@ def speedtest(protein, strategy, minutes=1, greed=1, care=0, chunk_size=6, chunk
             results[protein.stability] += 1
         else:
             results[protein.stability] = 1
-
+    
     return results
