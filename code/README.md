@@ -73,15 +73,15 @@ Calls get_next_unique_config, at first with an empty list. Takes the config that
 ```
 >> get_best_config(protein, strategy, iterations, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3)
 ```
-This method is used to return a best configuration within the given number of iterations. The method uses the same input as generate_path(), but has an extra argument called iterations. This is the number of times the user wants to generate a single path.
+This function is used to return a best configuration within the given number of iterations. The function uses the same input as generate_path(), but has an extra argument called iterations. This is the number of times the user wants to generate a single path.
 
 ```
 >> speedtest(protein, strategy, minutes=1, greed=1, care=0, chunk_size=6, chunk_iterations=100, step_strategy="greedy", depth=3)
 ```
-This method generates paths within the given amount of time in minutes. It returns a dictionary with stabilities as keys and the number of times the stability is found as the value. All input arguments except for minutes are used a mentioned before.
+This function generates paths within the given amount of time in minutes. It returns a dictionary with stabilities as keys and the number of times the stability is found as the value. All input arguments except for minutes are used a mentioned before.
 
 ### csv.py
-This file contains methods to save the amino acids, directions and coordinates of a generated protein into a csv file. As well as a method to read this csv file again and generate the protein as saved by the csv file.
+This file contains functions to save the amino acids, directions and coordinates of a generated protein into a csv file. As well as a method to read this csv file again and generate the protein as saved by the csv file.
 To save a generated protein, use:
 ```
 >> csv_compiler(protein, csv_name="protein")
@@ -90,20 +90,20 @@ By default, this saves the protein into a file named protein.csv in the current 
 ```
 >> protein = csv_reader("csv_file")
 ```
-Where csv_file is the name of the csv file in which the protein is saved, it is read as a string. This method immediately creates a new protein object and generates the path by looking at the coordinates the protein takes. This object needs to be assigned to a name.
+Where csv_file is the name of the csv file in which the protein is saved, it is read as a string. This function immediately creates a new protein object and generates the path by looking at the coordinates the protein takes. This object needs to be assigned to a name.
 
 ### visuals.py
-This file contains methods that create histograms or plots to easily check results.
+This file contains functions that create histograms or plots to easily check results.
 
 ```
 >> plot_path(protein)
 ```
-This method plots a path of the folded protein, depending on the protein dimensions, the plot will be in 2D or 3D.
+This function plots a path of the folded protein, depending on the protein dimensions, the plot will be in 2D or 3D.
 
 ```
 >> care_histogram(protein, iterations, strategy, percentage, chunk_size=6, chunk_iterations=100, step_strategy="greedy")
 ```
-This function plots multiple plots in one figure. 'nrows' is the amount of plots vertically. 'ncols' is the amount of plots horizontally. Thus, nrows=3 and ncols=4 means 12 plots. Care is plotted for a range of 0.0 until 'max_care'. In the plot, only 'percentage' is shown, that is, if 90 is given 90% of the data is shown. 
+This function plots multiple plots in one figure. 'nrows' is the amount of plots vertically. 'ncols' is the amount of plots horizontally. Thus, nrows=3 and ncols=4 means 12 plots. Care is plotted for a range of 0.0 until 'max_care'. In the plot, only 'percentage' is shown, that is, if 90 is given 90% of the data is shown.
 
 ```
 >> comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0, it_chunky=0, care_chunky=0, it_forward=0, care_forward=0)
@@ -113,10 +113,9 @@ This function plots all the different algorithms against eachother. It plots it 
 ```
 >> forward_depth_test(protein, minutes, depth_range)
 ```
-This function plots different depth sizes for the Forward Search algorithm on top of eachother. It uses a time range, with the same amount of time for all depth sizes. This is done because sometimes the time explodes and no results are found. 'depth_range' needs a tuple with all the depth sizes desired to test. 
+This function plots different depth sizes for the Forward Search algorithm on top of eachother. It uses a time range, with the same amount of time for all depth sizes. This is done because sometimes the time explodes and no results are found. 'depth_range' needs a tuple with all the depth sizes desired to test.
 
 ```
 >> chunk_size_test(protein, minutes, chunk_range)
 ```
-This function plots different chunk sizes for the Chunky Path algorithm against eachother. It uses a time range, with the same amount of time for all depth sizes. This is done because sometimes the time explodes and no results are found. 'chunk_range' needs a tuple with all the chunk sizes desired to test. 
-
+This function plots different chunk sizes for the Chunky Path algorithm against eachother. It uses a time range, with the same amount of time for all depth sizes. This is done because sometimes the time explodes and no results are found. 'chunk_range' needs a tuple with all the chunk sizes desired to test.
