@@ -7,7 +7,12 @@ string2 = HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH
 string3 = HCPHPCPHPCHCHPHPPPHPPPHPPPPHPCPHPPPHPHHHCCHCHCHCHH
 string4 = HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH
 
-In each folder are results that belong to the specified protein string. One can find folders belonging to the algorithms and some files that include results of all algorithms. In these folders are specific results generated for specific algorithms. There are folders for greedy, chunky path and forward search.
+### General
+In each folder are results that belong to the specified protein string. One can find folders belonging to the algorithms and some files that include results of all algorithms. In these folders are specific results generated for specific algorithms. There are folders for greedy, chunky path and forward search. All these algorithm files contain a csv and png of the best found path. The specifics can be found in the file names.
+
+In all string folders is a
 
 ### Greedy
-In all greedy folders, one can find histograms that compare the care factors, depending on the dimensions used. This can be found in a file named care_hist_2D (or 3D). Furthermore
+In all greedy folders, one can find histograms that compare the care factors, depending on the dimensions used. This can be found in a file named care_hist_2D (or 3D).
+
+###
