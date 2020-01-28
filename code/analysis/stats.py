@@ -59,14 +59,14 @@ def get_separating_duplicates(protein, strategy, duplication_threshold, greed=1,
 
     while found:
         separation, config, found = get_next_unique_config(
-                                        protein, strategy, configs, 
+                                        protein, strategy, configs,
                                         duplication_threshold, greed=greed,
                                         care=care, chunk_size=chunk_size,
                                         chunk_iterations=chunk_iterations,
                                         step_strategy=step_strategy,
                                         depth=depth
                                         )
-        print(separation
+        print(separation)
         separating_duplicates.append(separation)
         configs.append(config)
 
