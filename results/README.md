@@ -18,7 +18,7 @@ In all greedy folders, one can find histograms that compare the care factors, de
 ### Chunky Path
 In the chunky path folders are some extra care histograms and chunk size tests. Except for the chunk size, the care histograms are the same as greedy. The chunk size in the care histogram can be found in the name by n=chunk_size.
 
-The chunk size tests are for comparing different chunk sizes. The files are named chunk_size_compare_2min_6-12_2D (or 3D). This means that every chunk size has generated paths for 2 minutes. 6-12 is the chunk size range, with steps of 2.
+The chunk size tests are for comparing different chunk sizes. The files are named chunk_size_compare_2min_6-12_2D (or 3D). This means that every chunk size has generated paths for 2 minutes. 6-12 is the chunk size range, with steps of 2 (The first string uses chunk sizes of 4-10).
 
 ### Forward Search
 In the forward search folders are some tests for the depth, where it will be tested which depth would provide the best result. The files are called depth_test_min5_3_4_5_2D.png (or 3D). This means that every depth is tested for 5 minutes (this number is not always 5) and the a depth range of 3,4 and 5 is used.
