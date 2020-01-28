@@ -2,6 +2,7 @@
 main.py
 
 The User Interface for the project
+
 '''
 
 from code.algorithms.greedy_path import generate_greedy_path
@@ -74,7 +75,7 @@ if default == "y":
     print()
 
     print("Type plot to plot this path, or type csv to save the results in a \
-    csv file called protein.csv, or anything else to quit.")
+csv file called protein.csv, or anything else to quit.")
     while True:
         action_best = input("")
 
@@ -160,11 +161,11 @@ else:
         print()
         print("What would you like to do?")
         print("Type speedtest to do a speedtest with your input, it will \
-        generate results within the given time.")
+generate results within the given time.")
         print("Type best to find the best generated path with the input you \
-        have provided.")
+have provided.")
         print("Type change to alter your variables. Note that this implies \
-        that you have to change everything up to the algorithm")
+that you have to change everything up to the algorithm")
         print("Type quit to quit the program.")
         action = input("")
         print()
@@ -182,7 +183,7 @@ else:
         if algorithm == "r":
             if action == "speedtest":
                 print("How many minutes do you want to run the algorithm? \
-                (formula uses: input * 60 seconds)")
+(formula uses: input * 60 seconds)")
                 while True:
                     minutes = float(input(""))
                     if minutes:
@@ -197,8 +198,8 @@ else:
                 print()
 
                 print("Type plot to plot this path, or type csv to save the \
-                results in a csv file called protein.csv, or anything \
-                else to continue with something else.")
+results in a csv file called protein.csv, or anything \
+else to continue with something else.")
                 while True:
                     action_best = input("")
 
@@ -212,7 +213,7 @@ else:
         elif algorithm == "g":
             if action == "speedtest":
                 print("How many minutes do you want to run the algorithm? \
-                (formula uses: input * 60 seconds)")
+(formula uses: input * 60 seconds)")
                 while True:
                     minutes = float(input(""))
                     if minutes:
@@ -228,8 +229,8 @@ else:
                 print()
 
                 print("Type plot to plot this path, or type csv to save the \
-                results in a csv file called protein.csv, or anything \
-                else to continue with something else.")
+results in a csv file called protein.csv, or anything \
+else to continue with something else.")
                 while True:
                     action_best = input("")
 
@@ -243,7 +244,7 @@ else:
         elif algorithm == "c":
             if action == "speedtest":
                 print("How many minutes do you want to run the algorithm? \
-                (formula uses: input * 60 seconds)")
+(formula uses: input * 60 seconds)")
                 while True:
                     minutes = float(input(""))
                     if minutes:
@@ -263,8 +264,8 @@ else:
                 print()
 
                 print("Type plot to plot this path, or type csv to save the \
-                results in a csv file called protein.csv, or anything \
-                else to continue with something else.")
+results in a csv file called protein.csv, or anything \
+else to continue with something else.")
                 while True:
                     action_best = input("")
 
@@ -278,7 +279,7 @@ else:
         elif algorithm == "f":
             if action == "speedtest":
                 print("How many minutes do you want to run the algorithm? \
-                (formula uses: input * 60 seconds)")
+(formula uses: input * 60 seconds)")
                 while True:
                     minutes = float(input(""))
                     if minutes:
@@ -294,8 +295,8 @@ else:
                 print()
 
                 print("Type plot to plot this path, or type csv to save the \
-                results in a csv file called protein.csv, or anything \
-                else to continue with something else.")
+results in a csv file called protein.csv, or anything \
+else to continue with something else.")
                 while True:
                     action_best = input("")
 
@@ -309,7 +310,7 @@ else:
         if action == "change":
             print("What algorithm do you want to perform on this protein?")
             print("Insert r for random, g for greedy, c for chunky path of f \
-            for forward search.")
+for forward search.")
 
             while True:
                 algorithm = input("")
@@ -335,7 +336,7 @@ else:
                         break
 
                 print("Do you want to want the care factor to be 0? \
-                (y for yes)")
+(y for yes)")
                 use_care = input("")
                 if use_care == "y":
                     care = 0
@@ -360,7 +361,7 @@ else:
                         break
 
                 print("What single step strategy do you want to use? (r for \
-                random, g for greedy): ")
+random, g for greedy): ")
                 while True:
                     step_strategy = input("")
                     if step_strategy == "r" or step_strategy == "g":
@@ -368,7 +369,7 @@ else:
 
                 if step_strategy == "g":
                     print("Do you want to want the care factor to be 0? \
-                    (y for yes)")
+(y for yes)")
                     use_care = input("")
                     if use_care == "y":
                         care = 0
