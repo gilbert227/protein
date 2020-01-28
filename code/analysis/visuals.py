@@ -228,7 +228,6 @@ def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0,
         label=f'Chunky Path, care={care_chunky}', kde=False, norm_hist=True)
     sns.distplot(df_forward["forward"], color="deeppink",
         bins = range(best_solution + 1),
-        bins = range(best_solution),
         label=f'Forward Search, care={care_forward}', kde=False, norm_hist=True)
 
     plt.title(f'Density Plot of algorithms, best solution={best_solution} \
