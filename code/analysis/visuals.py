@@ -58,11 +58,11 @@ def plot_path(protein):
     plt.axis('off')
     plt.show()
 
-def care_histogram(protein, iterations, strategy, percentage, max_care, nrows=2, ncols=2, chunk_size = 6, chunk_iterations = 100, step_strategy = "greedy"):
+def care_histogram(protein, iterations, strategy, percentage, max_care, nrows=2, ncols=2, chunk_size=8, chunk_iterations=50, step_strategy="greedy"):
     '''
     Plots the given strategies for different values for care in one figure with multiple histograms.
-    The input argument 'percentage' is used to filter the amount shown in the plot. 
-    Care is tested for 0.0 until 'max_care'. 
+    The input argument 'percentage' is used to filter the amount shown in the plot.
+    Care is tested for 0.0 until 'max_care'.
     '''
 
     df = pd.DataFrame()
@@ -89,7 +89,7 @@ def care_histogram(protein, iterations, strategy, percentage, max_care, nrows=2,
     max = df.iloc[-1].max()
 
     best_care = df.iloc[-1].idxmax()
-    
+
     sns.set()
     fig, axes = plt.subplots(nrows=nrows, ncols=ncols)
     fig.subplots_adjust(hspace=0.5)
@@ -106,7 +106,7 @@ def care_histogram(protein, iterations, strategy, percentage, max_care, nrows=2,
 
 def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0, it_chunky=0, care_chunky=0, it_forward=0, care_forward=0):
     ''' Compares the different algorithms in a density histogram. '''
-    
+
     # the random algorithm
     df_random = pd.DataFrame()
     stabilities = []
@@ -127,7 +127,7 @@ def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0, it_chunky=0
     dict_stability = {'greedy': stabilities}
     df_greedy = df_greedy.assign(**dict_stability)
 
-    # the chunky path algorithm 
+    # the chunky path algorithm
     df_chunky = pd.DataFrame()
     stabilities = []
     for i in range(it_chunky):
@@ -137,7 +137,7 @@ def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0, it_chunky=0
     dict_stability = {'chunky': stabilities}
     df_chunky = df_chunky.assign(**dict_stability)
 
-    # the foward search algorithm 
+    # the foward search algorithm
     df_forward = pd.DataFrame()
     stabilities = []
     for i in range(it_forward):
@@ -195,7 +195,7 @@ def comparing_test(protein, it_random=0, it_greedy=0, care_greedy=0, it_chunky=0
 def forward_depth_test(protein, minutes, depth_range):
     ''' Plots a density plot with different depths of the forward search algorithm. '''
 
-    # generate data   
+    # generate data
     stability_lists = []
     for depth in depth_range:
         stabilities = []
@@ -269,4 +269,3 @@ def chunk_size_test(protein, minutes, chunk_range):
     plt.ylabel('Density')
     plt.legend()
     plt.show()
-

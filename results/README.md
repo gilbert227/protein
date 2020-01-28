@@ -13,10 +13,12 @@ In each folder are results that belong to the specified protein string. One can 
 In all string folders is a comparing algorithm png. This histogram puts all algorithms in the same graph so the user can easily compare the algorithms.
 
 ### Greedy
-In all greedy folders, one can find histograms that compare the care factors, depending on the dimensions used. This can be found in a file named care_hist_2D (or 3D).
+In all greedy folders, one can find histograms that compare the care factors, depending on the dimensions used. This can be found in a file named care_hist_2D_10000it_00-05.png (or 3D). This means that 10000 paths are made for every specified care factor. The last part specifies the range of the care factor.
 
 ### Chunky Path
-In the chunky path folders are some extra care histograms and chunk size tests.
+In the chunky path folders are some extra care histograms and chunk size tests. Except for the chunk size, the care histograms are the same as greedy. The chunk size in the care histogram can be found in the name by n=chunk_size.
+
+The chunk size tests are for comparing different chunk sizes.
 
 ### Forward Search
-In the forward search folders are some tests for the depth, where it will be tested which depth would provide the best result. The files are called depth_test_min5_3_4_5_2D (or 3D). This means that every depth is tested for 5 minutes and the a depth range of 3,4 and 5 is used.
+In the forward search folders are some tests for the depth, where it will be tested which depth would provide the best result. The files are called depth_test_min5_3_4_5_2D.png (or 3D). This means that every depth is tested for 5 minutes and the a depth range of 3,4 and 5 is used.
