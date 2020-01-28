@@ -6,4 +6,4 @@ from code.helpers.navigator import get_surrounding_coordinates, get_step_options
 from code.classes.protein import Protein
 from code.analysis.stats import generate_path, get_next_unique_config, get_separating_duplicates, get_best_config, speedtest
 from code.analysis.csv import csv_reader, csv_compiler
-from code.analysis.visuals import plot_path, care_histogram, comparing_test, speed_test_plot, forward_depth_test, chunky_path_care, depth_forward_test
+from code.analysis.visuals import plot_path, care_histogram, comparing_test, forward_depth_test, chunk_size_test
