@@ -21,4 +21,4 @@ In the chunky path folders are some extra care histograms and chunk size tests. 
 The chunk size tests are for comparing different chunk sizes.
 
 ### Forward Search
-In the forward search folders are some tests for the depth, where it will be tested which depth would provide the best result. The files are called depth_test_min5_3_4_5_2D.png (or 3D). This means that every depth is tested for 5 minutes and the a depth range of 3,4 and 5 is used.
+In the forward search folders are some tests for the depth, where it will be tested which depth would provide the best result. The files are called depth_test_min5_3_4_5_2D.png (or 3D). This means that every depth is tested for 5 minutes (this number is not always 5) and the a depth range of 3,4 and 5 is used.

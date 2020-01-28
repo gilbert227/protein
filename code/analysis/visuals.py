@@ -232,7 +232,7 @@ def forward_depth_test(protein, minutes, depth_range):
     plt.show()
 
 
-def chunk_size_test(protein, minutes, chunk_range):
+def chunk_size_test(protein, minutes, chunk_range, care=0):
     """ Test the different kind of depth from Chunky Path algorithm. """
 
     stability_lists = []
@@ -241,7 +241,7 @@ def chunk_size_test(protein, minutes, chunk_range):
         # do the test for a specific period per chunk size
         t_end = time.time() + int(60 * minutes)
         while time.time() < t_end:
-            generate_path(protein, 'chunky path', chunk_size=size)
+            generate_path(protein, 'chunky path', chunk_size=size, care=care)
             stabilities.append(abs(protein.stability))
 
         stabilities.sort()
