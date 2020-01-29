@@ -87,10 +87,7 @@ def care_histogram(protein, iterations, strategy, percentage, max_care,
         stabilities = []
 
         for ii in range(iterations):
-            generate_path(protein, strategy, greed=1, care=care,
-                chunk_size=chunk_size,
-                chunk_iterations=chunk_iterations,
-                step_strategy=step_strategy)
+            generate_path(protein, strategy, greed=1, care=care, chunk_size=chunk_size, chunk_iterations=chunk_iterations, step_strategy=step_strategy)
 
             stabilities.append(abs(protein.stability))
 
@@ -100,8 +97,7 @@ def care_histogram(protein, iterations, strategy, percentage, max_care,
         df = df.assign(**dict_stability)
 
     # get the desired percentage data to plot
-    df.drop(df.head(int((iterations / 100) *
-            (1 - percentage))).index,inplace=True)
+    df.drop(df.head(int((iterations / 100) * (1 - percentage))).index, inplace=True)
 
     # used for range of x-axis for plot
     min = df.iloc[0].min()
@@ -118,10 +114,8 @@ def care_histogram(protein, iterations, strategy, percentage, max_care,
     sns.set_palette('pastel')
     for i, ax in zip(np.arange(0, max_care * 10 + 1, 1), axes.flatten()):
         care = i/10
-        sns.distplot(df[f'care={care}'], ax=ax,
-                    bins=len(set(df[f'care={care}'])), kde=False)
-        ax.set(title=f'care = {care}', xlabel='stability',
-                color='green', ylabel='frequency')
+        sns.distplot(df[f'care={care}'], ax=ax, color='green', bins=len(set(df[f'care={care}'])), kde=False)
+        ax.set(title=f'care = {care}', xlabel='stability', ylabel='frequency')
         ax.set_xlim([min, max])
 
     plt.show()
