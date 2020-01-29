@@ -114,8 +114,15 @@ def care_histogram(protein, iterations, strategy, percentage, max_care,
     sns.set_palette('pastel')
     for i, ax in zip(np.arange(0, max_care * 10 + 1, 1), axes.flatten()):
         care = i/10
+<<<<<<< HEAD
         sns.distplot(df[f'care={care}'], ax=ax, color='green', bins=len(set(df[f'care={care}'])), kde=False)
         ax.set(title=f'care = {care}', xlabel='stability', ylabel='frequency')
+=======
+        sns.distplot(df[f'care={care}'], ax=ax, color='green',
+                    bins=len(set(df[f'care={care}'])), kde=False)
+        ax.set(title=f'care = {care}', xlabel='stability',
+                ylabel='frequency')
+>>>>>>> e3fc14ca50db52429caad878225cfb48531d0465
         ax.set_xlim([min, max])
 
     plt.show()
